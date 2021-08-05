@@ -10,16 +10,19 @@ namespace Game
     {
         static int lvl = 0;
         static int[,] map = Map.map(lvl);
+        static int endX = 18;
+        static int endY = 18;
         int mapSizeX = map.GetLength(0);
         int mapSizeY = map.GetLength(1);
         int playerX = 1;
         int playerY = 1;
-        int renderDistend = 1;
+        private static int renderDistend = 1;
         bool makeMap = false;
-        ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6, ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8};
-        string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "-"};
-        string mapIcons = "0='-':1='|':2='/':3='\\':4='¯':5='_':6=' ':7='*':H='H':8='-'(End point)";
-        string commands = "C='clear'";
+        bool playerWasOnTp = false;
+        ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6, ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9};
+        string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "-", "L", "<"};
+        string mapIcons = "0='-':1='|':2='/':3='\\':4='¯':5='_':6=' ':7='*':H='H'(Teleport must have 2 to work no more no less):8='-'(End point):L='-'(Same as 'H' but difrent):9='<'(a one way door can go thru the big end)";
+        string commands = "C='clear':F1='export map'";
 
         static void Main(string[] args)
         {
@@ -36,8 +39,9 @@ namespace Game
             while (true)
             {
                 writeMap();
-                keyPress();
                 if(wasOnSpecial) writeMap();
+                keyPress();
+                if(playerWasOnTp) writeMap();
             }
         }
 
@@ -76,7 +80,17 @@ namespace Game
                 playerY--;
                 if (!canDoMove())
                 {
-                    playerY++;
+                    if(map[playerX,playerY] != 11){
+                        
+                        //Console.SetCursorPosition(0,25);
+                        //Console.WriteLine("###"+map[playerX,playerY]+"###");
+                        playerY++;
+                    }
+                    else {
+                        playerY--;
+                        //Console.SetCursorPosition(0,25);
+                        //Console.WriteLine("<<<"+map[playerX,playerY]+">>>");
+                    }
                 }
             }
             else if(key == ConsoleKey.RightArrow && playerY < mapSizeY - 1)
@@ -91,7 +105,7 @@ namespace Game
                 makeMap = !makeMap;
             }else if (makeMap)
             {
-                if(key == ConsoleKey.Home)
+                if(key == ConsoleKey.F1)
                 {
                     Console.SetCursorPosition(0, 0);
                     Console.Clear();
@@ -144,16 +158,24 @@ namespace Game
 
         private bool isAllowed(int v)
         {
-            return (v == 0 || v == 8 || v == 9);
+            return (v == 0 || v == 8 || v == 9 || v == 10);
         }
 
         bool wasOnSpecial = false;
 
+        public static void setRenderDistens(int dist){
+            renderDistend = dist;
+        }
+        public static void setEndPos(int x, int y){
+            endX = x;
+            endY = y;
+        }
+        
         private void writeMap()
         {
             Console.SetCursorPosition(0, 1);
-            int tpX = -1;
-            int tpY = -1;
+            int[] tpX = {-1, -1};
+            int[] tpY = {-1, -1};
             bool playerOnTp = false;
             for (int x = 0; x < mapSizeX; x++)
             {
@@ -167,22 +189,27 @@ namespace Game
                             lvl++;
                             Console.SetCursorPosition(0, 0);
                             Console.Write("Level " + (lvl - 1) + " compleat. Curent lvl " + lvl);
-                            map = Map.map(1);
+                            map = Map.map(lvl);
                             writeMap();
                             return;
                         }
                     }
-                    if(num == 8)
+                    if(num == 9){
+                        endX = x;
+                        endY = y;
+                        wasOnSpecial = true;
+                    }
+                    else if(num == 8)
                     {
-                        if (!wasOnSpecial && !makeMap)
+                        if (!playerWasOnTp && !makeMap)
                         {
                             if(x == playerX && y == playerY)
                             {
-                                if(tpX != -1 && tpY != -1)
+                                if(tpX[0] != -1 && tpY[0] != -1)
                                 {
-                                    playerX = tpX;
-                                    playerY = tpY;
-                                    wasOnSpecial = true;
+                                    playerX = tpX[0];
+                                    playerY = tpY[0];
+                                    playerWasOnTp = true;
                                 }
                                 else
                                 {
@@ -191,24 +218,64 @@ namespace Game
                             }
                             else
                             {
-                                tpX = x;
-                                tpY = y;
+                                tpX[0] = x;
+                                tpY[0] = y;
                             }
                             if (playerOnTp)
                             {
-                                if (tpX != -1 && tpY != -1)
+                                if (tpX[0] != -1 && tpY[0] != -1)
                                 {
-                                    playerX = tpX;
-                                    playerY = tpY;
-                                    wasOnSpecial = true;
-                                    
+                                    playerX = tpX[0];
+                                    playerY = tpY[0];
+                                    playerWasOnTp = true;
                                 }
                             }
+                        }else{
+                            playerWasOnTp = false;
                         }
-                        else
+                        /*int[] tmp = tp(tpX[0], tpY[0], x, y, playerOnTp);
+                        tpX[0] = tmp[0];
+                        tpY[0] = tmp[1];
+                        playerOnTp = tmp[2]==1;*/
+                    }
+                    else if(num == 10)
+                    {
+                        if (!playerWasOnTp && !makeMap)
                         {
-                            wasOnSpecial = false;
+                            if(x == playerX && y == playerY)
+                            {
+                                if(tpX[1] != -1 && tpY[1] != -1)
+                                {
+                                    playerX = tpX[1];
+                                    playerY = tpY[1];
+                                    playerWasOnTp = true;
+                                }
+                                else
+                                {
+                                    playerOnTp = true;
+                                }
+                            }
+                            else
+                            {
+                                tpX[1] = x;
+                                tpY[1] = y;
+                            }
+                            if (playerOnTp)
+                            {
+                                if (tpX[1] != -1 && tpY[1] != -1)
+                                {
+                                    playerX = tpX[1];
+                                    playerY = tpY[1];
+                                    playerWasOnTp = true;
+                                }
+                            }
+                        }else{
+                            playerWasOnTp = false;
                         }
+                        /*int[] tmp = tp(tpX[1], tpY[1], x, y, playerOnTp);
+                        tpX[1] = tmp[0];
+                        tpY[1] = tmp[1];
+                        playerOnTp = tmp[2]==1;*/
                     }
                     try
                     {
@@ -218,7 +285,11 @@ namespace Game
                     {
                         icon = "&";
                     }
-                    if(!((x <= playerX + renderDistend && x >= playerX - renderDistend) && (y <= playerY + renderDistend && y >= playerY - renderDistend)))
+                    if(!(((x <= playerX + renderDistend && x >= playerX - renderDistend) && 
+                            (y <= playerY + renderDistend && y >= playerY - renderDistend)) || 
+
+                            ((x <= endX + renderDistend && x >= endX - renderDistend) && 
+                            (y <= endY + renderDistend && y >= endY - renderDistend))))
                     {
                         if (!makeMap) icon = " ";
                     }
@@ -249,19 +320,56 @@ namespace Game
                 {
                     Console.Write(" ");
                 }
+                //Console.WriteLine("\nX[0] = "+tpX[0]+": Y[0] = "+tpY[0]);
+                //Console.WriteLine("X[1] = "+tpX[1]+": Y[1] = "+tpY[1]);
             }
+        }
+
+        private int[] tp(int tpX, int tpY, int x, int y, bool playerOnTp){
+            if (!playerWasOnTp && !makeMap)
+            {
+                if(x == playerX && y == playerY)
+                {
+                    if(tpX != -1 && tpY != -1)
+                    {
+                        playerX = tpX;
+                        playerY = tpY;
+                        playerWasOnTp = true;
+                    }
+                    else
+                    {
+                        playerOnTp = true;
+                    }
+                }
+                else
+                {
+                    tpX = x;
+                    tpY = y;
+                }
+                if (playerOnTp)
+                {
+                    if (tpX != -1 && tpY != -1)
+                    {
+                        playerX = tpX;
+                        playerY = tpY;
+                        playerWasOnTp = true;
+                    }
+                }
+            }else{
+                playerWasOnTp = false;
+            }
+            return new int[]{tpX, tpY, (playerOnTp?1:0)}; 
         }
 
         static string getSafeLocation()
         {
-            int p = (int)Environment.OSVersion.Platform;
-            if(p == 6)
+            PlatformID p = Environment.OSVersion.Platform;
+            Console.WriteLine(p);
+            Console.WriteLine(p);
+            if(p == PlatformID.MacOSX)
             {
-                return "~/Library/Application Support/Zacharias/TextGame";
-            }else if(p == 4)
-            {
-                return "/var/Zacharias/TextGame";
-            }else if(p == 2)
+                return "~/Library/Application\\ Support/Zacharias/TextGame";
+            }else if(p == PlatformID.Win32NT)
             {
                 string user = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
                 Console.WriteLine(user);
@@ -276,8 +384,8 @@ namespace Game
         static void OnProcessExit(object sender, EventArgs e)
         {
             string loc = getSafeLocation();
-            //Console.WriteLine(loc);
-            //Console.WriteLine(Path.Combine(loc, "Test.txt"));
+            Console.WriteLine(loc);
+            Console.WriteLine(Path.Combine(loc, "Test.txt"));
             if (!Directory.Exists(loc))
             {
                 Directory.CreateDirectory(loc);
