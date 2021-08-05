@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -122,6 +122,8 @@ namespace Game
                 {
                     clearMap();
                 }
+            }else if(key == ConsoleKey.Escape){
+                Environment.Exit(0);
             }
             Console.SetCursorPosition(0, mapSizeY + 1);
             Console.Write(" ");
