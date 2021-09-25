@@ -19,7 +19,7 @@ namespace Game
         private static int renderDistend = 1;
         bool makeMap = false;
         bool playerWasOnTp = false;
-        ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6, ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.EQUALS};
+        ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6, ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R};
         string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "ˇ", "^", " ", "="};
         string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "#", "*", "H", "E", "L", "<", ">", "ˇ", "^", "%", "="};
         string mapIcons = "0='-':1='|':2='/':3='\\':4='¯':5='_':6=' ':7='*':H='H'(Teleport must have 2 to work no more no less):8='-'(End point):L='-'(Same as 'H' but difrent):<='<'(a one way door can go thru the big end):O='>'(a one way door can go thru the big end):U='ˇ'(a one way door can go thru the big end):I='^'(a one way door can go thru the big end):Y=' '(same as 6 but walkible)";
@@ -68,30 +68,39 @@ namespace Game
             ConsoleKey key = Console.ReadKey().Key;
             if (key == ConsoleKey.UpArrow && playerX > 0)
             {
-                playerX--;
-                if (!canDoMove())
+                if(!(map[playerX, playerY] == 16))
                 {
-                    if(map[playerX,playerY] == 14){
-                        
-                        //Console.SetCursorPosition(0,25);
-                        //Console.WriteLine("###"+map[playerX,playerY]+"###");
-                        playerX--;
-                    }else{
-                        playerX++;
+                    playerX--;
+                    if (!canDoMove())
+                    {
+                        if (map[playerX, playerY] == 14) {
+
+                            //Console.SetCursorPosition(0,25);
+                            //Console.WriteLine("###"+map[playerX,playerY]+"###");
+                            playerX--;
+                        }else {
+                            playerX++;
+                        }
                     }
                 }
             }else if(key == ConsoleKey.DownArrow && playerX < mapSizeX - 1)
             {
-                playerX++;
-                if (!canDoMove())
+                if (!(map[playerX, playerY] == 16))
                 {
-                    if(map[playerX,playerY] == 13){
-                        
-                        //Console.SetCursorPosition(0,25);
-                        //Console.WriteLine("###"+map[playerX,playerY]+"###");
-                        playerX++;
-                    }else{
-                        playerX--;
+                    playerX++;
+                    if (!canDoMove())
+                    {
+                        if (map[playerX, playerY] == 13)
+                        {
+
+                            //Console.SetCursorPosition(0,25);
+                            //Console.WriteLine("###"+map[playerX,playerY]+"###");
+                            playerX++;
+                        }
+                        else
+                        {
+                            playerX--;
+                        }
                     }
                 }
             }
@@ -167,6 +176,11 @@ namespace Game
             }else if(key == ConsoleKey.Escape){
                 Environment.Exit(0);
             }
+            else
+            {
+                Console.SetCursorPosition(0, mapSizeY + 4);
+                //Console.Write(key.ToString());
+            }
             Console.SetCursorPosition(0, mapSizeY + 1);
             Console.Write(" ");
         }
@@ -186,7 +200,7 @@ namespace Game
 
         private bool isAllowed(int v)
         {
-            return (v == 0 || v == 8 || v == 9 || v == 10 || v == 14);
+            return (v == 0 || v == 8 || v == 9 || v == 10 || v == 14 || v == 16);
         }
 
         bool wasOnSpecial = false;
@@ -307,7 +321,14 @@ namespace Game
                     }
                     try
                     {
-                        icon = this.icons[num];
+                        if (makeMap)
+                        {
+                            icon = this.devIcons[num];
+                        }
+                        else
+                        {
+                            icon = this.icons[num];
+                        }
                     }catch(Exception e) { e.ToString(); }
                     if (x == playerX && y == playerY)
                     {
