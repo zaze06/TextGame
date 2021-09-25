@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -19,9 +19,10 @@ namespace Game
         private static int renderDistend = 1;
         bool makeMap = false;
         bool playerWasOnTp = false;
-        ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6, ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9};
-        string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "-", "L", "<"};
-        string mapIcons = "0='-':1='|':2='/':3='\\':4='¯':5='_':6=' ':7='*':H='H'(Teleport must have 2 to work no more no less):8='-'(End point):L='-'(Same as 'H' but difrent):9='<'(a one way door can go thru the big end)";
+        ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6, ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.EQUALS};
+        string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "ˇ", "^", " ", "="};
+        string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "#", "*", "H", "E", "L", "<", ">", "ˇ", "^", "%", "="};
+        string mapIcons = "0='-':1='|':2='/':3='\\':4='¯':5='_':6=' ':7='*':H='H'(Teleport must have 2 to work no more no less):8='-'(End point):L='-'(Same as 'H' but difrent):<='<'(a one way door can go thru the big end):O='>'(a one way door can go thru the big end):U='ˇ'(a one way door can go thru the big end):I='^'(a one way door can go thru the big end):Y=' '(same as 6 but walkible)";
         string commands = "C='clear':F1='export map'";
 
         static void Main(string[] args)
@@ -36,6 +37,11 @@ namespace Game
             //clearMap();
             wait(3);
             Console.Clear();
+            for(int i = 0; i < mapSizeY+2; i++){
+                Console.WriteLine("");
+            }
+            Console.Write("W="+mapSizeX+" H="+mapSizeY+"\n");
+            //Environment.Exit(0);
             while (true)
             {
                 writeMap();
@@ -65,14 +71,28 @@ namespace Game
                 playerX--;
                 if (!canDoMove())
                 {
-                    playerX++;
+                    if(map[playerX,playerY] == 14){
+                        
+                        //Console.SetCursorPosition(0,25);
+                        //Console.WriteLine("###"+map[playerX,playerY]+"###");
+                        playerX--;
+                    }else{
+                        playerX++;
+                    }
                 }
             }else if(key == ConsoleKey.DownArrow && playerX < mapSizeX - 1)
             {
                 playerX++;
                 if (!canDoMove())
                 {
-                    playerX--;
+                    if(map[playerX,playerY] == 13){
+                        
+                        //Console.SetCursorPosition(0,25);
+                        //Console.WriteLine("###"+map[playerX,playerY]+"###");
+                        playerX++;
+                    }else{
+                        playerX--;
+                    }
                 }
             }
             else if(key == ConsoleKey.LeftArrow && playerY > 0)
@@ -98,7 +118,15 @@ namespace Game
                 playerY++;
                 if (!canDoMove())
                 {
-                    playerY--;
+                    if(map[playerX,playerY] == 12){
+                        
+                        //Console.SetCursorPosition(0,25);
+                        //Console.WriteLine("###"+map[playerX,playerY]+"###");
+                        playerY++;
+                    }else{
+                        playerY--;
+                    }
+                    
                 }
             }else if(key == ConsoleKey.Enter)
             {
@@ -158,7 +186,7 @@ namespace Game
 
         private bool isAllowed(int v)
         {
-            return (v == 0 || v == 8 || v == 9 || v == 10);
+            return (v == 0 || v == 8 || v == 9 || v == 10 || v == 14);
         }
 
         bool wasOnSpecial = false;
@@ -189,7 +217,7 @@ namespace Game
                             lvl++;
                             Console.SetCursorPosition(0, 0);
                             Console.Write("Level " + (lvl - 1) + " compleat. Curent lvl " + lvl);
-                            map = Map.map(lvl);
+                            loadMap(lvl);
                             writeMap();
                             return;
                         }
@@ -323,6 +351,12 @@ namespace Game
                 //Console.WriteLine("\nX[0] = "+tpX[0]+": Y[0] = "+tpY[0]);
                 //Console.WriteLine("X[1] = "+tpX[1]+": Y[1] = "+tpY[1]);
             }
+        }
+
+        private void loadMap(int lvl){
+            map = Map.map(lvl);
+            //mapSizeX = map.GetLength(0);
+            //mapSizeY = map.GetLength(1);
         }
 
         private int[] tp(int tpX, int tpY, int x, int y, bool playerOnTp){
