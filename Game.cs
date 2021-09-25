@@ -19,10 +19,11 @@ namespace Game
         private static int renderDistend = 1;
         bool makeMap = false;
         bool playerWasOnTp = false;
+        int[] walkibles = {0, 8, 9, 10, 15, 16};
         ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6, ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R};
         string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "ˇ", "^", " ", "="};
         string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "#", "*", "H", "E", "L", "<", ">", "ˇ", "^", "%", "="};
-        string mapIcons = "0='-':1='|':2='/':3='\\':4='¯':5='_':6=' ':7='*':H='H'(Teleport must have 2 to work no more no less):8='-'(End point):L='-'(Same as 'H' but difrent):<='<'(a one way door can go thru the big end):O='>'(a one way door can go thru the big end):U='ˇ'(a one way door can go thru the big end):I='^'(a one way door can go thru the big end):Y=' '(same as 6 but walkible)";
+        string mapIcons = "0='-':1='|':2='/':3='\\':4='¯':5='_':6=' ':7='*':H='H'(Teleport must have 2 to work no more no less):8='E'(End point):L='-'(Same as 'H' but difrent):<='<'(a one way door can go thru the big end):O='>'(a one way door can go thru the big end):U='ˇ'(a one way door can go thru the big end):I='^'(a one way door can go thru the big end):Y=' '(same as 6 but walkible):R='='(a walk way that only posible to walk anong side cant go up or down on it)";
         string commands = "C='clear':F1='export map'";
 
         static void Main(string[] args)
@@ -173,6 +174,13 @@ namespace Game
                 {
                     clearMap();
                 }
+                if(key == ConsoleKey.M)
+                {
+                    Console.SetCursorPosition(0, mapSizeY + 1);
+                    Console.Write(" ");
+                    Console.SetCursorPosition(0, mapSizeY + 2);
+                    loadMap(int.Parse(Console.ReadKey().KeyChar+""));
+                }
             }else if(key == ConsoleKey.Escape){
                 Environment.Exit(0);
             }
@@ -200,7 +208,14 @@ namespace Game
 
         private bool isAllowed(int v)
         {
-            return (v == 0 || v == 8 || v == 9 || v == 10 || v == 14 || v == 16);
+            for(int i = 0; i < walkibles.Length; i++)
+            {
+                if(v == walkibles[i])
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         bool wasOnSpecial = false;
@@ -348,14 +363,14 @@ namespace Game
             }
             if (makeMap)
             {
-                Console.WriteLine("Curent pice: '" + this.icons[map[playerX, playerY]] + "'");
+                Console.WriteLine("Curent pice: '" + this.icons[map[playerX, playerY]] + "' id: " + map[playerX, playerY]+ "  ");
                 Console.WriteLine(mapIcons);
                 Console.WriteLine(commands);
             }
             else
             {
                 
-                for (int i = 0; i < 16; i++)
+                for (int i = 0; i < 25; i++)
                 {
                     Console.Write(" ");
                 }
