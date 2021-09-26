@@ -147,6 +147,7 @@ namespace Game
                 {
                     Console.SetCursorPosition(0, 0);
                     Console.Clear();
+                    Console.Write("case "+lvl+": return new int[20,20]\n");
                     Console.Write("{");
                     for (int x = 0; x < mapSizeX; x++)
                     {
@@ -182,7 +183,20 @@ namespace Game
                     loadMap(int.Parse(Console.ReadKey().KeyChar+""));
                 }
             }else if(key == ConsoleKey.Escape){
-                Environment.Exit(0);
+                if(Map.map(lvl).Equals(map))
+                {
+                    Console.SetCursorPosition(0, mapSizeY + 1);
+                    Console.Write("OPS: Do you whana exit and discard chages? press esc again to conferm");
+                    Console.SetCursorPosition(0, mapSizeY + 2);
+                    if(Console.ReadKey().Key == ConsoleKey.Escape)
+                    {
+                        Environment.Exit(0);
+                    }
+                }
+                else
+                {
+                    Environment.Exit(0);
+                }
             }
             else
             {
@@ -391,6 +405,7 @@ namespace Game
 
         private void loadMap(int lvl){
             map = Map.map(lvl);
+            Game.lvl = lvl;
             //mapSizeX = map.GetLength(0);
             //mapSizeY = map.GetLength(1);
         }
