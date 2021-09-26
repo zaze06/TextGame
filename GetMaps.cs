@@ -5,15 +5,12 @@ using System.Reflection;
 
 public class GetMaps
 {
-    static Maps maps;
+    static Maps maps = JsonConvert.DeserializeObject<Maps>(File.ReadAllText(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "/maps.json"));
     public GetMaps()
 	{
-        string output = File.ReadAllText(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "/maps.json");
-        maps = JsonConvert.DeserializeObject<Maps>(output);
-
     }
 
-    internal static int[,] map(int v)
+    public int[,] getMap(int v)
     {
         Map map = maps.maps[v];
         Game.Game.playerX = map.startPosition[0];
@@ -228,6 +225,6 @@ public class GetMaps
                 {14,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,7,0,7,0},
                 {0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,7,0,7,0}};
             default: return new int[20, 20];*/
-        }
+        //}
     }
 }

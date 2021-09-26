@@ -8,8 +8,9 @@ namespace Game
 {
     class Game
     {
+        static GetMaps maps = new GetMaps();
         static int lvl = 0;
-        static int[,] map = GetMaps.map(lvl);
+        static int[,] map = maps.getMap(lvl);
         static int endX = 18;
         static int endY = 18;
         int mapSizeX = map.GetLength(0);
@@ -37,6 +38,7 @@ namespace Game
 
         static void Main(string[] args)
         {
+            maps = new GetMaps();
             new Game().game(args);
         }
         void game(string[] args)
@@ -246,7 +248,7 @@ namespace Game
             }*/
             else if (key == ConsoleKey.Escape)
             {
-                if (!mapEqual(GetMaps.map(lvl), map))
+                if (!mapEqual(maps.getMap(lvl), map))
                 {
                     ConsoleColor forgrund = Console.ForegroundColor;
                     ConsoleColor backgrund = Console.BackgroundColor;
@@ -354,7 +356,7 @@ namespace Game
                     if (x == playerX && y == playerY) {
                         if (num == 9 && !makeMap)
                         {
-                            if (!mapEqual(GetMaps.map(lvl), map))
+                            if (!mapEqual(maps.getMap(lvl), map))
                             {
                                 ConsoleColor forgrund = Console.ForegroundColor;
                                 ConsoleColor backgrund = Console.BackgroundColor;
@@ -536,8 +538,8 @@ namespace Game
         }
 
         private void loadMap(int lvl){
-            map = GetMaps.map(lvl);
-            colors = ColorMaps.colorMap(lvl);
+            map = maps.getMap(lvl);
+            //colors = ColorMaps.colorMap(lvl);
             Game.lvl = lvl;
             //mapSizeX = map.GetLength(0);
             //mapSizeY = map.GetLength(1);
