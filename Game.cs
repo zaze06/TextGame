@@ -18,6 +18,7 @@ namespace Game
         int playerY = 1;
         private static int renderDistend = 1;
         bool makeMap = false;
+        bool typeMode = false;
         bool playerWasOnTp = false;
         int[] walkibles = {0, 8, 9, 10, 15, 16};
         ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6, ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R};
@@ -25,6 +26,7 @@ namespace Game
         string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "#", "*", "H", "E", "L", "<", ">", "ˇ", "^", "%", "="};
         string mapIcons = "0='-':1='|':2='/':3='\\':4='¯':5='_':6=' ':7='*':H='H'(Teleport must have 2 to work no more no less):8='E'(End point):L='-'(Same as 'H' but difrent):<='<'(a one way door can go thru the big end):O='>'(a one way door can go thru the big end):U='ˇ'(a one way door can go thru the big end):I='^'(a one way door can go thru the big end):Y=' '(same as 6 but walkible):R='='(a walk way that only posible to walk anong side cant go up or down on it)";
         string commands = "C='clear':F1='export map'";
+        int lastTile = 0;
 
         static void Main(string[] args)
         {
@@ -66,88 +68,118 @@ namespace Game
         private void keyPress()
         {
             Console.SetCursorPosition(0, mapSizeY + 2);
-            ConsoleKey key = Console.ReadKey().Key;
+            ConsoleKeyInfo rawKey = Console.ReadKey();
+            ConsoleKey key = rawKey.Key;
             if (key == ConsoleKey.UpArrow && playerX > 0)
             {
-                if(!(map[playerX, playerY] == 16))
+                if (makeMap)
                 {
-                    playerX--;
-                    if (!canDoMove())
-                    {
-                        if (map[playerX, playerY] == 14) {
-
-                            //Console.SetCursorPosition(0,25);
-                            //Console.WriteLine("###"+map[playerX,playerY]+"###");
-                            playerX--;
-                        }else {
-                            playerX++;
-                        }
-                    }
+                    this.lastTile = map[playerX, playerY];
                 }
-            }else if(key == ConsoleKey.DownArrow && playerX < mapSizeX - 1)
-            {
-                if (!(map[playerX, playerY] == 16))
+                if ((map[playerX, playerY] == 16) && !makeMap)
                 {
                     playerX++;
-                    if (!canDoMove())
+                }
+                playerX--;
+                if (!canDoMove())
+                {
+                    if (map[playerX, playerY] == 14)
                     {
-                        if (map[playerX, playerY] == 13)
-                        {
-
-                            //Console.SetCursorPosition(0,25);
-                            //Console.WriteLine("###"+map[playerX,playerY]+"###");
-                            playerX++;
-                        }
-                        else
-                        {
-                            playerX--;
-                        }
+                        //Console.SetCursorPosition(0,25);
+                        //Console.WriteLine("###"+map[playerX,playerY]+"###");
+                        playerX--;
+                    }
+                    else
+                    {
+                        playerX++;
+                    }
+                }
+            }else if (key == ConsoleKey.DownArrow && playerX < mapSizeX - 1)
+            {
+                if (makeMap)
+                {
+                    this.lastTile = map[playerX, playerY];
+                }
+                if ((map[playerX, playerY] == 16) && !makeMap)
+                {
+                    playerX--;
+                }
+                playerX++;
+                if (!canDoMove())
+                {
+                    
+                    if (map[playerX, playerY] == 14)
+                    {
+                        //Console.SetCursorPosition(0,25);
+                        //Console.WriteLine("###"+map[playerX,playerY]+"###");
+                        playerX++;
+                    }
+                    else
+                    {
+                        playerX--;
                     }
                 }
             }
-            else if(key == ConsoleKey.LeftArrow && playerY > 0)
+            else if (key == ConsoleKey.LeftArrow && playerY > 0)
             {
+                if (makeMap)
+                {
+                    this.lastTile = map[playerX, playerY];
+                }
                 playerY--;
                 if (!canDoMove())
                 {
-                    if(map[playerX,playerY] != 11){
-                        
+                    if (map[playerX, playerY] != 11)
+                    {
+
                         //Console.SetCursorPosition(0,25);
                         //Console.WriteLine("###"+map[playerX,playerY]+"###");
                         playerY++;
                     }
-                    else {
+                    else
+                    {
                         playerY--;
                         //Console.SetCursorPosition(0,25);
                         //Console.WriteLine("<<<"+map[playerX,playerY]+">>>");
                     }
                 }
             }
-            else if(key == ConsoleKey.RightArrow && playerY < mapSizeY - 1)
+            else if (key == ConsoleKey.RightArrow && playerY < mapSizeY - 1)
             {
+                if (makeMap)
+                {
+                    this.lastTile = map[playerX, playerY];
+                }
                 playerY++;
                 if (!canDoMove())
                 {
-                    if(map[playerX,playerY] == 12){
-                        
+                    if (map[playerX, playerY] == 12)
+                    {
+
                         //Console.SetCursorPosition(0,25);
                         //Console.WriteLine("###"+map[playerX,playerY]+"###");
                         playerY++;
-                    }else{
+                    }
+                    else
+                    {
                         playerY--;
                     }
-                    
+
                 }
-            }else if(key == ConsoleKey.Enter)
+            }
+            else if (key == ConsoleKey.Enter)
             {
                 makeMap = !makeMap;
-            }else if (makeMap)
+            }/*else if(key == ConsoleKey.OemMinus)
             {
-                if(key == ConsoleKey.F1)
+                typeMode = !typeMode;
+            }*/else if (makeMap)
+            {
+                if (key == ConsoleKey.F1)
                 {
                     Console.SetCursorPosition(0, 0);
                     Console.Clear();
-                    Console.Write("case "+lvl+": return new int[20,20]\n");
+                    Console.Write("case " + lvl + ": return new int[20,20]\n");
                     Console.Write("{");
                     for (int x = 0; x < mapSizeX; x++)
                     {
@@ -160,37 +192,54 @@ namespace Game
                     }
                     Console.WriteLine("}");
                     Environment.Exit(0);
-                }else if(key == ConsoleKey.Backspace)
+                }
+                else if (key == ConsoleKey.Backspace)
                 {
                     map[playerX, playerY] = 0;
                 }
-                for(int i = 0; i < keyIcons.Length; i++)
-                {
-                    if(key == keyIcons[i])
-                    {
-                        map[playerX, playerY] = i;
-                    }
-                }
-                if(key == ConsoleKey.C)
+                else if (key == ConsoleKey.C)
                 {
                     clearMap();
                 }
-                if(key == ConsoleKey.M)
+                else if (key == ConsoleKey.M)
                 {
                     Console.SetCursorPosition(0, mapSizeY + 1);
                     Console.Write(" ");
                     Console.SetCursorPosition(0, mapSizeY + 2);
-                    loadMap(int.Parse(Console.ReadKey().KeyChar+""));
+                    loadMap(int.Parse(Console.ReadKey().KeyChar + ""));
                 }
-            }else if(key == ConsoleKey.Escape){
-                if(Map.map(lvl).Equals(map))
+                else if (key == ConsoleKey.NumPad0)
+                {
+                    map[playerX, playerY] = lastTile;
+                }
+                else
+                {
+                    for (int i = 0; i < keyIcons.Length; i++)
+                    {
+                        if (key == keyIcons[i])
+                        {
+                            map[playerX, playerY] = i;
+                        }
+                    }
+                }
+            }/*else if (typeMode)
+            {
+                map[playerX, playerY] = asciiToInt(rawKey.KeyChar);
+            }*/
+            else if (key == ConsoleKey.Escape)
+            {
+                if (!mapEqual(Map.map(lvl), map))
                 {
                     Console.SetCursorPosition(0, mapSizeY + 1);
                     Console.Write("OPS: Do you whana exit and discard chages? press esc again to conferm");
                     Console.SetCursorPosition(0, mapSizeY + 2);
-                    if(Console.ReadKey().Key == ConsoleKey.Escape)
+                    if (Console.ReadKey().Key == ConsoleKey.Escape)
                     {
                         Environment.Exit(0);
+                    }
+                    else
+                    {
+                        Console.Clear();
                     }
                 }
                 else
@@ -205,6 +254,28 @@ namespace Game
             }
             Console.SetCursorPosition(0, mapSizeY + 1);
             Console.Write(" ");
+        }
+
+        private bool mapEqual(int[,] map1, int[,] map2)
+        {
+            int mapSizeX = map1.GetLength(0);
+            int mapSizeY = map1.GetLength(1);
+            if ((mapSizeX != map2.GetLength(0)) || (mapSizeY != map2.GetLength(1))) return false;
+            //Console.SetCursorPosition(0, 0);
+            //Console.Write("same size");
+            for(int x = 0; x < mapSizeX; x++)
+            {
+                for(int y = 0; y < mapSizeY; y++)
+                {
+                    if(map1[x,y] != map2[x, y])
+                    {
+                        return false;
+                    }
+                }
+            }
+            //Console.SetCursorPosition(0, 0);
+            //Console.Write("same blocks");
+            return true;
         }
 
         private bool canDoMove()
@@ -363,7 +434,7 @@ namespace Game
                     {
                         icon = "&";
                     }
-                    if(!(((x <= playerX + renderDistend && x >= playerX - renderDistend) && 
+                    if(!(((  x <= playerX + renderDistend && x >= playerX - renderDistend) && 
                             (y <= playerY + renderDistend && y >= playerY - renderDistend)) || 
 
                             ((x <= endX + renderDistend && x >= endX - renderDistend) && 
@@ -371,6 +442,12 @@ namespace Game
                     {
                         if (!makeMap) icon = " ";
                     }
+                    else if((map[playerX, playerY] == 16) && (map[x, y] != 16) && (!makeMap))
+                    {
+                        icon = " ";
+                        if ((y > playerY || y < playerY) && !(x < playerX || x > playerX)) icon = this.icons[num];
+                        
+                    }else if ((map[playerX, playerY] == 16) && (x > playerX || x < playerX) && !makeMap) icon = " ";
                     Console.Write(icon);
                 }
                 Console.Write("\n");
