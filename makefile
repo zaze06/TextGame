@@ -1,4 +1,4 @@
 build:
-	mcs Game.cs Map.cs ColorMaps.cs
+	mcs *.cs -r:"Newtonsoft.json.dll"
 run:
-	mono Game.exe
+	mono --attach="Newtonsoft.json.dll" Game.exe
