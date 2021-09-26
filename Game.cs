@@ -22,8 +22,8 @@ namespace Game
         bool playerWasOnTp = false;
         int[] walkibles = {0, 8, 9, 10, 15, 16};
         ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6, ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R};
-        string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "ˇ", "^", " ", "="};
-        string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "#", "*", "H", "E", "L", "<", ">", "ˇ", "^", "%", "="};
+        string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "="};
+        string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "#", "*", "H", "E", "L", "<", ">", "v", "^", "%", "="};
         string mapIcons = "0='-':1='|':2='/':3='\\':4='¯':5='_':6=' ':7='*':H='H'(Teleport must have 2 to work no more no less):8='E'(End point):L='-'(Same as 'H' but difrent):<='<'(a one way door can go thru the big end):O='>'(a one way door can go thru the big end):U='ˇ'(a one way door can go thru the big end):I='^'(a one way door can go thru the big end):Y=' '(same as 6 but walkible):R='='(a walk way that only posible to walk anong side cant go up or down on it)";
         string commands = "C='clear':F1='export map'";
         int lastTile = 0;
@@ -108,7 +108,7 @@ namespace Game
                 if (!canDoMove())
                 {
                     
-                    if (map[playerX, playerY] == 14)
+                    if (map[playerX, playerY] == 13)
                     {
                         //Console.SetCursorPosition(0,25);
                         //Console.WriteLine("###"+map[playerX,playerY]+"###");
