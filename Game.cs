@@ -6,43 +6,46 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Game
 {
-    class Game
+    class main
     {
-        static GetMaps maps = new GetMaps();
-        static int lvl = 0;
-        static int[,] map = maps.getMap(lvl);
-        static int endX = 18;
-        static int endY = 18;
-        int mapSizeX = map.GetLength(0);
-        int mapSizeY = map.GetLength(1);
-        public static int playerX;
-        public static int playerY;
-        private static int renderDistend = 1;
-        bool makeMap = false;
+        public static GetMaps maps = new GetMaps();
+        public static int lvl = 0;
+        public static Map map3 = maps.getMap(lvl);
+        public int[,] map = map3.map;
+        public int endX = 18;
+        public int endY = 18;
+        public int mapSizeX = 0;
+        public int mapSizeY = 0;
+        public static int playerX = map3.startPosition[0];
+        public static int playerY = map3.startPosition[1];
+        public int renderDistend = 1;
+        public bool makeMap = false;
         //bool typeMode = false;
-        bool playerWasOnTp = false;
-        int[] walkibles = {0, 8, 9, 10, 15, 16, 17};
-        ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6,
+        public bool playerWasOnTp = false;
+        public int[] walkibles = {0, 8, 9, 10, 15, 16, 17};
+        public ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6,
             ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R,
             ConsoleKey.G };
-        public static ConsoleColor[] colors;
-        string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "=", "|"};
-        string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "#", "*", "H", "E", "L", "<", ">", "v", "^", "%", "=", "|"};
-        string mapIcons = "0='-' : 1='|' : 2='/' : 3='\\' : 4='¯' : 5='_' : 6=' ' : 7='*' : H='H'(Teleport must have 2 to work no more no less) : " +
+        public ConsoleColor[] colors = map3.color;
+        public string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "=", "|"};
+        public string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "#", "*", "H", "E", "L", "<", ">", "v", "^", "%", "=", "|"};
+        public string mapIcons = "0='-' : 1='|' : 2='/' : 3='\\' : 4='¯' : 5='_' : 6=' ' : 7='*' : H='H'(Teleport must have 2 to work no more no less) : " +
             "8='E'(End point) : L='-'(Same as 'H' but difrent) : <='<'(a one way door can go thru the big end) : " +
             "O='>'(a one way door can go thru the big end) : U='v'(a one way door can go thru the big end) : " +
             "I='^'(a one way door can go thru the big end) : Y=' '(same as 6 but walkible) :" +
             " R='='(a walk way that only posible to walk anong side cant go up or down on it)";
-        string commands = "C='clear' : F1='export map'";
-        int lastTile = 0;
+        public string commands = "C='clear' : F1='export map'";
+        private int lastTile = 0;
 
         static void Main(string[] args)
         {
-            maps = new GetMaps();
-            new Game().game(args);
+            new main().game(args);
         }
         void game(string[] args)
         {
+            maps = new GetMaps();
+            mapSizeX = this.map.GetLength(0);
+            mapSizeY = this.map.GetLength(1);
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
             Console.WriteLine("Game made by Zacharias\n©Zacharias 2021");
             //Console.WriteLine(now.Hour + ":" + now.Minute + ":" + now.Second);
@@ -248,7 +251,7 @@ namespace Game
             }*/
             else if (key == ConsoleKey.Escape)
             {
-                if (!mapEqual(maps.getMap(lvl), map))
+                if (!mapEqual(maps.getMap(lvl).map, map))
                 {
                     ConsoleColor forgrund = Console.ForegroundColor;
                     ConsoleColor backgrund = Console.BackgroundColor;
@@ -332,14 +335,6 @@ namespace Game
         }
 
         bool wasOnSpecial = false;
-
-        public static void setRenderDistens(int dist){
-            renderDistend = dist;
-        }
-        public static void setEndPos(int x, int y){
-            endX = x;
-            endY = y;
-        }
         
         private void writeMap()
         {
@@ -356,7 +351,7 @@ namespace Game
                     if (x == playerX && y == playerY) {
                         if (num == 9 && !makeMap)
                         {
-                            if (!mapEqual(maps.getMap(lvl), map))
+                            if (!mapEqual(maps.getMap(lvl).map, map))
                             {
                                 ConsoleColor forgrund = Console.ForegroundColor;
                                 ConsoleColor backgrund = Console.BackgroundColor;
@@ -537,10 +532,13 @@ namespace Game
             }
         }
 
-        private void loadMap(int lvl){
-            map = maps.getMap(lvl);
+        private void loadMap(int lvl1){
+            Map map = maps.getMap(lvl1);
+            playerX = map.startPosition[0];
+            playerY = map.startPosition[1];
+            colors = map.color;
             //colors = ColorMaps.colorMap(lvl);
-            Game.lvl = lvl;
+            lvl = lvl1;
             //mapSizeX = map.GetLength(0);
             //mapSizeY = map.GetLength(1);
         }

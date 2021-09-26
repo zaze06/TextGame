@@ -2,21 +2,20 @@
 using Newtonsoft.Json;
 using System.IO;
 using System.Reflection;
+using Game;
 
 public class GetMaps
 {
-    static Maps maps = JsonConvert.DeserializeObject<Maps>(File.ReadAllText(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "/maps.json"));
+    static Maps maps = 
+    JsonConvert.DeserializeObject<Maps>(File.ReadAllText(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + 
+    "/maps.json"));
     public GetMaps()
 	{
     }
 
-    public int[,] getMap(int v)
+    public Map getMap(int v)
     {
-        Map map = maps.maps[v];
-        Game.Game.playerX = map.startPosition[0];
-        Game.Game.playerY = map.startPosition[1];
-        Game.Game.colors = map.color;
-        return map.map;
+        return maps.maps[v];
         /*
         switch (v){
             case 0: return new int[20,20]
