@@ -21,11 +21,19 @@ namespace Game
         bool typeMode = false;
         bool playerWasOnTp = false;
         int[] walkibles = {0, 8, 9, 10, 15, 16};
-        ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6, ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R};
+        ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6,
+            ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R};
+        ConsoleColor[] colors = {ConsoleColor.Green, ConsoleColor.DarkGray, ConsoleColor.DarkGray, ConsoleColor.DarkGray, ConsoleColor.DarkGray,
+            ConsoleColor.DarkGray, ConsoleColor.Black, ConsoleColor.Red, ConsoleColor.DarkMagenta, ConsoleColor.White, ConsoleColor.DarkMagenta, 
+            ConsoleColor.Cyan, ConsoleColor.Cyan, ConsoleColor.Cyan, ConsoleColor.Cyan, ConsoleColor.Black, ConsoleColor.Blue};
         string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "="};
         string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "#", "*", "H", "E", "L", "<", ">", "v", "^", "%", "="};
-        string mapIcons = "0='-':1='|':2='/':3='\\':4='¯':5='_':6=' ':7='*':H='H'(Teleport must have 2 to work no more no less):8='E'(End point):L='-'(Same as 'H' but difrent):<='<'(a one way door can go thru the big end):O='>'(a one way door can go thru the big end):U='ˇ'(a one way door can go thru the big end):I='^'(a one way door can go thru the big end):Y=' '(same as 6 but walkible):R='='(a walk way that only posible to walk anong side cant go up or down on it)";
-        string commands = "C='clear':F1='export map'";
+        string mapIcons = "0='-' : 1='|' : 2='/' : 3='\\' : 4='¯' : 5='_' : 6=' ' : 7='*' : H='H'(Teleport must have 2 to work no more no less) : " +
+            "8='E'(End point) : L='-'(Same as 'H' but difrent) : <='<'(a one way door can go thru the big end) : " +
+            "O='>'(a one way door can go thru the big end) : U='v'(a one way door can go thru the big end) : " +
+            "I='^'(a one way door can go thru the big end) : Y=' '(same as 6 but walkible) :" +
+            " R='='(a walk way that only posible to walk anong side cant go up or down on it)";
+        string commands = "C='clear' : F1='export map'";
         int lastTile = 0;
 
         static void Main(string[] args)
@@ -177,6 +185,8 @@ namespace Game
             {
                 if (key == ConsoleKey.F1)
                 {
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.SetCursorPosition(0, 0);
                     Console.Clear();
                     Console.Write("case " + lvl + ": return new int[20,20]\n");
@@ -230,6 +240,10 @@ namespace Game
             {
                 if (!mapEqual(Map.map(lvl), map))
                 {
+                    ConsoleColor forgrund = Console.ForegroundColor;
+                    ConsoleColor backgrund = Console.BackgroundColor;
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.SetCursorPosition(0, mapSizeY + 1);
                     Console.Write("OPS: Do you whana exit and discard chages? press esc again to conferm");
                     Console.SetCursorPosition(0, mapSizeY + 2);
@@ -240,10 +254,14 @@ namespace Game
                     else
                     {
                         Console.Clear();
+                        Console.BackgroundColor = backgrund;
+                        Console.ForegroundColor = forgrund;
                     }
                 }
                 else
                 {
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.ForegroundColor = ConsoleColor.White;
                     Environment.Exit(0);
                 }
             }
@@ -421,6 +439,7 @@ namespace Game
                     }
                     try
                     {
+                        Console.ForegroundColor = colors[num];
                         if (makeMap)
                         {
                             icon = this.devIcons[num];
@@ -454,6 +473,8 @@ namespace Game
             }
             if (makeMap)
             {
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine("Curent pice: '" + this.icons[map[playerX, playerY]] + "' id: " + map[playerX, playerY]+ "  ");
                 Console.WriteLine(mapIcons);
                 Console.WriteLine(commands);
