@@ -60,8 +60,8 @@ public class Test
             serializer.Serialize(file, maps1);
         }
     }
-	static void Main()
+	/*static void Main()
     {
         new Test();
-    }
+    }*/
 }
