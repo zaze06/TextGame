@@ -11,8 +11,8 @@ public class Test
 
     public Test()
 	{
-        List<KeyValuePair<int, Map>> maps = new List<KeyValuePair<int, Map>>();
-        maps.Add(new KeyValuePair<int, Map>(0, new Map
+        List<Map> maps = new List<Map>();
+        maps.Add(new Map
         {
             map = new int[20, 20]
             {
@@ -42,7 +42,7 @@ public class Test
                     ConsoleColor.White, ConsoleColor.DarkMagenta, ConsoleColor.Cyan, ConsoleColor.Cyan, ConsoleColor.Cyan, ConsoleColor.Cyan,
                     ConsoleColor.Black, ConsoleColor.Blue, ConsoleColor.Blue},
             startPosition = new int[2] { 1, 1 }
-        }));
+        });
 
 
         Maps maps1 = new Maps

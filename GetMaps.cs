@@ -5,7 +5,7 @@ using System.Reflection;
 
 public class GetMaps
 {
-    Maps maps;
+    static Maps maps;
     public GetMaps()
 	{
         string output = File.ReadAllText(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "/maps.json");
@@ -15,6 +15,12 @@ public class GetMaps
 
     internal static int[,] map(int v)
     {
+        Map map = maps.maps[v];
+        Game.Game.playerX = map.startPosition[0];
+        Game.Game.playerY = map.startPosition[1];
+        Game.Game.colors = map.color;
+        return map.map;
+        /*
         switch (v){
             case 0: return new int[20,20]
                 {
@@ -39,7 +45,7 @@ public class GetMaps
                     { 7,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,7,9,7},
                     { 7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7}
                 };
-            case 1: /*Game.Game.setEndPos(16,18);*/return new int[20,20]
+            case 1: return new int[20,20]
                 {
                     {7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7},
                     {7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
@@ -221,7 +227,7 @@ public class GetMaps
                 {0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,7,0,7,0},
                 {14,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,7,0,7,0},
                 {0,16,16,16,16,16,16,16,16,16,16,16,16,16,16,0,7,0,7,0}};
-            default: return new int[20, 20];
+            default: return new int[20, 20];*/
         }
     }
 }

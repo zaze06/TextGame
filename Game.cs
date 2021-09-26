@@ -14,8 +14,8 @@ namespace Game
         static int endY = 18;
         int mapSizeX = map.GetLength(0);
         int mapSizeY = map.GetLength(1);
-        int playerX = 1;
-        int playerY = 1;
+        public static int playerX;
+        public static int playerY;
         private static int renderDistend = 1;
         bool makeMap = false;
         //bool typeMode = false;
@@ -24,7 +24,7 @@ namespace Game
         ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6,
             ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R,
             ConsoleKey.G };
-        ConsoleColor[] colors = ColorMaps.colorMap(0);
+        public static ConsoleColor[] colors;
         string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "=", "|"};
         string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "#", "*", "H", "E", "L", "<", ">", "v", "^", "%", "=", "|"};
         string mapIcons = "0='-' : 1='|' : 2='/' : 3='\\' : 4='¯' : 5='_' : 6=' ' : 7='*' : H='H'(Teleport must have 2 to work no more no less) : " +

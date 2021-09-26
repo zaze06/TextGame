@@ -3,5 +3,5 @@ using System.Collections.Generic;
 
 public class Maps
 {
-	public IList<KeyValuePair<int, Map>> maps {get; set;}
+	public IList<Map> maps {get; set;}
 }
