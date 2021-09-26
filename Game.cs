@@ -23,9 +23,7 @@ namespace Game
         int[] walkibles = {0, 8, 9, 10, 15, 16};
         ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6,
             ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R};
-        ConsoleColor[] colors = {ConsoleColor.Green, ConsoleColor.DarkGray, ConsoleColor.DarkGray, ConsoleColor.DarkGray, ConsoleColor.DarkGray,
-            ConsoleColor.DarkGray, ConsoleColor.Black, ConsoleColor.Red, ConsoleColor.DarkMagenta, ConsoleColor.White, ConsoleColor.DarkMagenta, 
-            ConsoleColor.Cyan, ConsoleColor.Cyan, ConsoleColor.Cyan, ConsoleColor.Cyan, ConsoleColor.Black, ConsoleColor.Blue};
+        ConsoleColor[] colors = ColorMaps.colorMap(0);
         string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "="};
         string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "#", "*", "H", "E", "L", "<", ">", "v", "^", "%", "="};
         string mapIcons = "0='-' : 1='|' : 2='/' : 3='\\' : 4='¯' : 5='_' : 6=' ' : 7='*' : H='H'(Teleport must have 2 to work no more no less) : " +
@@ -200,7 +198,7 @@ namespace Game
                         }
                         Console.Write("}" + (x < mapSizeX - 1 ? ",\n" : ""));
                     }
-                    Console.WriteLine("}");
+                    Console.WriteLine("};");
                     Environment.Exit(0);
                 }
                 else if (key == ConsoleKey.Backspace)
@@ -217,6 +215,7 @@ namespace Game
                     Console.Write(" ");
                     Console.SetCursorPosition(0, mapSizeY + 2);
                     loadMap(int.Parse(Console.ReadKey().KeyChar + ""));
+                    Console.BackgroundColor = colors[1];
                 }
                 else if (key == ConsoleKey.NumPad0)
                 {
@@ -350,6 +349,7 @@ namespace Game
                             Console.SetCursorPosition(0, 0);
                             Console.Write("Level " + (lvl - 1) + " compleat. Curent lvl " + lvl);
                             loadMap(lvl);
+                            Console.BackgroundColor = colors[1];
                             writeMap();
                             return;
                         }
@@ -439,9 +439,13 @@ namespace Game
                     }
                     try
                     {
-                        Console.ForegroundColor = colors[num];
+                        Console.ForegroundColor = colors[num+2];
                         if (makeMap)
                         {
+                            if(num == 6 || num == 15)
+                            {
+                                Console.ForegroundColor = colors[2];
+                            }
                             icon = this.devIcons[num];
                         }
                         else
@@ -451,6 +455,7 @@ namespace Game
                     }catch(Exception e) { e.ToString(); }
                     if (x == playerX && y == playerY)
                     {
+                        Console.ForegroundColor = colors[0];
                         icon = "&";
                     }
                     if(!(((  x <= playerX + renderDistend && x >= playerX - renderDistend) && 
@@ -503,6 +508,7 @@ namespace Game
 
         private void loadMap(int lvl){
             map = Map.map(lvl);
+            colors = ColorMaps.colorMap(lvl);
             Game.lvl = lvl;
             //mapSizeX = map.GetLength(0);
             //mapSizeY = map.GetLength(1);
