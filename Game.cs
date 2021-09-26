@@ -9,7 +9,7 @@ namespace Game
     class Game
     {
         static int lvl = 0;
-        static int[,] map = Map.map(lvl);
+        static int[,] map = GetMaps.map(lvl);
         static int endX = 18;
         static int endY = 18;
         int mapSizeX = map.GetLength(0);
@@ -18,14 +18,15 @@ namespace Game
         int playerY = 1;
         private static int renderDistend = 1;
         bool makeMap = false;
-        bool typeMode = false;
+        //bool typeMode = false;
         bool playerWasOnTp = false;
-        int[] walkibles = {0, 8, 9, 10, 15, 16};
+        int[] walkibles = {0, 8, 9, 10, 15, 16, 17};
         ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6,
-            ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R};
+            ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R,
+            ConsoleKey.G };
         ConsoleColor[] colors = ColorMaps.colorMap(0);
-        string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "="};
-        string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "#", "*", "H", "E", "L", "<", ">", "v", "^", "%", "="};
+        string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "=", "|"};
+        string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "#", "*", "H", "E", "L", "<", ">", "v", "^", "%", "=", "|"};
         string mapIcons = "0='-' : 1='|' : 2='/' : 3='\\' : 4='¯' : 5='_' : 6=' ' : 7='*' : H='H'(Teleport must have 2 to work no more no less) : " +
             "8='E'(End point) : L='-'(Same as 'H' but difrent) : <='<'(a one way door can go thru the big end) : " +
             "O='>'(a one way door can go thru the big end) : U='v'(a one way door can go thru the big end) : " +
@@ -132,6 +133,10 @@ namespace Game
                 {
                     this.lastTile = map[playerX, playerY];
                 }
+                if ((map[playerX, playerY] == 17) && !makeMap)
+                {
+                    playerY++;
+                }
                 playerY--;
                 if (!canDoMove())
                 {
@@ -155,6 +160,10 @@ namespace Game
                 if (makeMap)
                 {
                     this.lastTile = map[playerX, playerY];
+                }
+                if ((map[playerX, playerY] == 17) && !makeMap)
+                {
+                    playerY--;
                 }
                 playerY++;
                 if (!canDoMove())
@@ -237,7 +246,7 @@ namespace Game
             }*/
             else if (key == ConsoleKey.Escape)
             {
-                if (!mapEqual(Map.map(lvl), map))
+                if (!mapEqual(GetMaps.map(lvl), map))
                 {
                     ConsoleColor forgrund = Console.ForegroundColor;
                     ConsoleColor backgrund = Console.BackgroundColor;
@@ -345,13 +354,26 @@ namespace Game
                     if (x == playerX && y == playerY) {
                         if (num == 9 && !makeMap)
                         {
-                            lvl++;
-                            Console.SetCursorPosition(0, 0);
-                            Console.Write("Level " + (lvl - 1) + " compleat. Curent lvl " + lvl);
-                            loadMap(lvl);
-                            Console.BackgroundColor = colors[1];
-                            writeMap();
-                            return;
+                            if (!mapEqual(GetMaps.map(lvl), map))
+                            {
+                                ConsoleColor forgrund = Console.ForegroundColor;
+                                ConsoleColor backgrund = Console.BackgroundColor;
+                                Console.BackgroundColor = ConsoleColor.Black;
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.SetCursorPosition(0, mapSizeY + 1);
+                                Console.Write("OPS: Do you whana exit and discard chages? press esc again to conferm");
+                                Console.SetCursorPosition(0, mapSizeY + 2);
+                                if (Console.ReadKey().Key == ConsoleKey.Escape)
+                                {
+                                    Environment.Exit(0);
+                                }
+                                else
+                                {
+                                    Console.Clear();
+                                    Console.BackgroundColor = backgrund;
+                                    Console.ForegroundColor = forgrund;
+                                }
+                            }
                         }
                     }
                     if(num == 9){
@@ -439,13 +461,20 @@ namespace Game
                     }
                     try
                     {
-                        Console.ForegroundColor = colors[num+2];
+                        Console.ForegroundColor = colors[num + 2];
+                        if (num == 6 || num == 15)
+                        {
+                            Console.ForegroundColor = colors[2];
+                        }
+                    }
+                    catch (Exception e) { 
+                        e.ToString();
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    try
+                    {
                         if (makeMap)
                         {
-                            if(num == 6 || num == 15)
-                            {
-                                Console.ForegroundColor = colors[2];
-                            }
                             icon = this.devIcons[num];
                         }
                         else
@@ -507,7 +536,7 @@ namespace Game
         }
 
         private void loadMap(int lvl){
-            map = Map.map(lvl);
+            map = GetMaps.map(lvl);
             colors = ColorMaps.colorMap(lvl);
             Game.lvl = lvl;
             //mapSizeX = map.GetLength(0);
