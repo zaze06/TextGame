@@ -1,4 +1,4 @@
-https://app.travis-ci.com/zaze06/TextGame.svg?branch=master
+![travis](https://app.travis-ci.com/zaze06/TextGame.svg?branch=master)
 # TextGame
 This is a game thats you run in terminal.
 # Run releases
