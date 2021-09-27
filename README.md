@@ -1,4 +1,4 @@
-[![.NET](https://github.com/zaze06/TextGame/actions/workflows/dotnet.yml/badge.svg)](https://github.com/zaze06/TextGame/actions/workflows/dotnet.yml)
+https://app.travis-ci.com/zaze06/TextGame.svg?branch=master
 # TextGame
 This is a game thats you run in terminal.
 # Run releases
