@@ -1,4 +1,4 @@
-[![build](https://github.com/zaze06/TextGame/actions/workflows/makefile.yml/badge.svg)](https://github.com/zaze06/TextGame/actions/workflows/makefile.yml)
+[![.NET](https://github.com/zaze06/TextGame/actions/workflows/dotnet.yml/badge.svg)](https://github.com/zaze06/TextGame/actions/workflows/dotnet.yml)
 # TextGame
 This is a game thats you run in terminal.
 # Run releases
