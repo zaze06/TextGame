@@ -1,4 +1,3 @@
 language: csharp
 mono:
-  - 6.12.0
-  - mono
+  - latest
