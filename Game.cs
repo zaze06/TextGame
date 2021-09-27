@@ -16,6 +16,7 @@ namespace TextGame
         public int endY = 18;
         public int mapSizeX = 0;
         public int mapSizeY = 0;
+        public int lifes = 5;
         public static int playerX = map3.startPosition[0];
         public static int playerY = map3.startPosition[1];
         public int renderDistend = 1;
@@ -24,10 +25,10 @@ namespace TextGame
         public int[] walkibles = {0, 8, 9, 10, 15, 16, 17};
         public ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6,
             ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R,
-            ConsoleKey.G };
+            ConsoleKey.G, ConsoleKey.D};
         public ConsoleColor[] colors = Util.convertIntArrayToColor(Util.convertListToIntArray(map3.color));
-        public string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "=", "|"};
-        public string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "#", "*", "H", "E", "L", "<", ">", "v", "^", "%", "=", "|"};
+        public string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "=", "|", "#"};
+        public string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "+", "*", "H", "E", "L", "<", ">", "v", "^", "%", "=", "|", "#"};
         public string mapIcons = "0='-' : 1='|' : 2='/' : 3='\\' : 4='¯' : 5='_' : 6=' ' : 7='*' : H='H'(Teleport must have 2 to work no more no less) : " +
             "8='E'(End point) : L='-'(Same as 'H' but difrent) : <='<'(a one way door can go thru the big end) : " +
             "O='>'(a one way door can go thru the big end) : U='v'(a one way door can go thru the big end) : " +
@@ -340,6 +341,7 @@ namespace TextGame
         }
 
         bool wasOnSpecial = false;
+        bool wasOnDmg = false;
         
         private void writeMap()
         {
@@ -347,6 +349,18 @@ namespace TextGame
             int[] tpX = {-1, -1};
             int[] tpY = {-1, -1};
             bool playerOnTp = false;
+            if(lifes == 0){
+                lifes = 5;
+                loadMap(0);
+                lvl = 0;
+                Console.SetCursorPosition(0, 0);
+                Console.Write("Level " + (lvl - 1) + " compleat. Curent lvl " + lvl);
+                playerX = 1;
+                playerY = 1;
+                writeMap();
+                return;
+            }
+            Console.Write("You have "+lifes+" lifes left\n");
             for (int x = 0; x < mapSizeX; x++)
             {
                 for (int y = 0; y < mapSizeY; y++)
@@ -382,6 +396,12 @@ namespace TextGame
                             loadMap(lvl);
                             writeMap();
                             return;
+                        }
+                        if(num == 18 && !makeMap && !wasOnDmg){
+                            wasOnDmg = true;
+                            lifes--;
+                        }else{
+                            wasOnDmg = false;
                         }
                     }
                     if(num == 9){
