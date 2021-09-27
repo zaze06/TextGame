@@ -2,9 +2,9 @@ name: Makefile CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ $default-branch ]
   pull_request:
-    branches: [ master ]
+    branches: [ $default-branch ]
 
 jobs:
   build:
@@ -12,9 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      
-    - name: Install dependencies
-      run: make build
+    - uses: actions/checkout@v2
+    
+    - name: configure
+      run: ./configure
       
     - name: Run check
-      run: make run
+      run: make check
+      
+    - name: Run distcheck
+      run: make distcheck
