@@ -33,7 +33,9 @@ namespace TextGame
             "8='E'(End point) : L='-'(Same as 'H' but difrent) : <='<'(a one way door can go thru the big end) : " +
             "O='>'(a one way door can go thru the big end) : U='v'(a one way door can go thru the big end) : " +
             "I='^'(a one way door can go thru the big end) : Y=' '(same as 6 but walkible) :" +
-            " R='='(a walk way that only posible to walk anong side cant go up or down on it)";
+            " R='='(a walk way that only posible to walk anong side cant go up or down on it) : "+
+            "G='|'(a walk way thay only posible to walk along side cant go left or right on it) : "+
+            "D='#'(a point that you tack one dmg when you walk on it)";
         public string commands = "C='clear' : F1='export map'";
         private int lastTile = 0;
 
