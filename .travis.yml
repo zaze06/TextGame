@@ -1,4 +1,4 @@
 language: csharp
 solution: Game.sln
-mono:
-  - none
+dotnet: 6.0.x
+mono: latest
