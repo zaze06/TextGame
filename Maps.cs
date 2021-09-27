@@ -1,7 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class Maps
+namespace TextGame
 {
-	public IList<Map> maps {get; set;}
+	public class Maps
+	{
+		public Map[] maps {get; set;}
+
+		public Maps(){
+			maps = new Map[]{new Map()};
+		}
+
+		public string toString(){
+			string output = "{";
+			for(int i = 0; i < maps.GetLength(0); i++){
+				
+				output += maps[i].ToString()+(i != maps.GetLength(0)-1?",":"");
+			}
+			output += "}";
+			return output;
+		}
+	}
 }

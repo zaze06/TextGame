@@ -4,14 +4,14 @@ using System.Reflection;
 using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace Game
+namespace TextGame
 {
-    class main
+    class Game
     {
-        public static GetMaps maps = new GetMaps();
+        //public static GetMaps maps = new GetMaps();
         public static int lvl = 0;
-        public static Map map3 = maps.getMap(lvl);
-        public int[,] map = map3.map;
+        public static Map map3 = new Map();
+        public int[,] map = Util.convertMapToIntArray(map3.map);
         public int endX = 18;
         public int endY = 18;
         public int mapSizeX = 0;
@@ -20,13 +20,12 @@ namespace Game
         public static int playerY = map3.startPosition[1];
         public int renderDistend = 1;
         public bool makeMap = false;
-        //bool typeMode = false;
         public bool playerWasOnTp = false;
         public int[] walkibles = {0, 8, 9, 10, 15, 16, 17};
         public ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6,
             ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R,
             ConsoleKey.G };
-        public ConsoleColor[] colors = map3.color;
+        public ConsoleColor[] colors = Util.convertIntArrayToColor(Util.convertListToIntArray(map3.color));
         public string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "=", "|"};
         public string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "#", "*", "H", "E", "L", "<", ">", "v", "^", "%", "=", "|"};
         public string mapIcons = "0='-' : 1='|' : 2='/' : 3='\\' : 4='¯' : 5='_' : 6=' ' : 7='*' : H='H'(Teleport must have 2 to work no more no less) : " +
@@ -39,15 +38,21 @@ namespace Game
 
         static void Main(string[] args)
         {
-            new main().game(args);
+            new Game();
         }
-        void game(string[] args)
+        public Game()
         {
-            maps = new GetMaps();
-            mapSizeX = this.map.GetLength(0);
-            mapSizeY = this.map.GetLength(1);
+            //new GetMaps();
+            //maps = new GetMaps();
+            //map3 = GetMaps.getMap(lvl);
+            map = GetMaps.getMap(lvl);
+            colors = ColorMaps.colorMap(lvl);
+            playerX = 1;
+            playerY = 1;
+            mapSizeX = map.GetLength(0);
+            mapSizeY = map.GetLength(1);
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
-            Console.WriteLine("Game made by Zacharias\n©Zacharias 2021");
+            Console.WriteLine("Text game made by Zacharias\n©Zacharias 2021");
             //Console.WriteLine(now.Hour + ":" + now.Minute + ":" + now.Second);
             //clearMap();
             wait(3);
@@ -251,7 +256,7 @@ namespace Game
             }*/
             else if (key == ConsoleKey.Escape)
             {
-                if (!mapEqual(maps.getMap(lvl).map, map))
+                if (!mapEqual(/*Util.convertMapToIntArray(GetMaps.getMap(lvl).map)*/GetMaps.getMap(lvl), map))
                 {
                     ConsoleColor forgrund = Console.ForegroundColor;
                     ConsoleColor backgrund = Console.BackgroundColor;
@@ -351,7 +356,7 @@ namespace Game
                     if (x == playerX && y == playerY) {
                         if (num == 9 && !makeMap)
                         {
-                            if (!mapEqual(maps.getMap(lvl).map, map))
+                            /*if (!mapEqual(/*Util.convertMapToIntArray(GetMaps.getMap(lvl).map)*//*GetMaps.getMap(lvl), map))
                             {
                                 ConsoleColor forgrund = Console.ForegroundColor;
                                 ConsoleColor backgrund = Console.BackgroundColor;
@@ -370,7 +375,13 @@ namespace Game
                                     Console.BackgroundColor = backgrund;
                                     Console.ForegroundColor = forgrund;
                                 }
-                            }
+                            }*/
+                            lvl++;
+                            Console.SetCursorPosition(0, 0);
+                            Console.Write("Level " + (lvl - 1) + " compleat. Curent lvl " + lvl);
+                            loadMap(lvl);
+                            writeMap();
+                            return;
                         }
                     }
                     if(num == 9){
@@ -533,10 +544,11 @@ namespace Game
         }
 
         private void loadMap(int lvl1){
-            Map map = maps.getMap(lvl1);
-            playerX = map.startPosition[0];
-            playerY = map.startPosition[1];
-            colors = map.color;
+            //Map map = GetMaps.getMap(lvl1);
+            map = GetMaps.getMap(lvl1);
+            playerX = playerX;//map.startPosition[0];
+            playerY = playerY;//map.startPosition[1];
+            colors = ColorMaps.colorMap(lvl1);//Util.convertIntArrayToColor(Util.convertListToIntArray(map.color));
             //colors = ColorMaps.colorMap(lvl);
             lvl = lvl1;
             //mapSizeX = map.GetLength(0);
