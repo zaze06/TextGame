@@ -1,4 +1,7 @@
 language: csharp
+mono: none
+dotnet: 6.0.100-rc.1.21463.6
 solution: Game.sln
-dotnet: 6.0.x
-mono: latest
+script:
+  - ./dotnet6/dotnet restore
+  - ./dotnet6/dotnet test
