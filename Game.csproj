@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <StartupObject>Test</StartupObject>
+    <TargetFramework>net5.0</TargetFramework>
+    <StartupObject>Game</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
