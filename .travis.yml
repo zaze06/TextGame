@@ -1,5 +1,5 @@
 language: csharp
-mono: none#latest
+mono: none #latest
 dotnet: 5.0.10
 solution: Game.sln
 #before_install:
