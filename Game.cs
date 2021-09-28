@@ -396,6 +396,10 @@ namespace TextGame
                             Console.SetCursorPosition(0, 0);
                             Console.Write("Level " + (lvl - 1) + " compleat. Curent lvl " + lvl);
                             loadMap(lvl);
+                            if(mapEqual(map, new int[20,20]))
+                            {
+
+                            }
                             writeMap();
                             return;
                         }
@@ -618,7 +622,7 @@ namespace TextGame
             PlatformID p = Environment.OSVersion.Platform;
             Console.WriteLine(p);
             Console.WriteLine(p);
-            if(p == PlatformID.MacOSX)
+            /*if(p == PlatformID.MacOSX)
             {
                 return "~/Library/Application\\ Support/Zacharias/TextGame";
             }else if(p == PlatformID.Win32NT)
@@ -629,9 +633,9 @@ namespace TextGame
                 return Path.Combine("C:", "Users", user.Split('\\')[1], "Documents","MyGames","Zacharias","TextGame");
             }
             else
-            {
+            {*/
                 return System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "/data";
-            }
+            //}
         }
         static void OnProcessExit(object sender, EventArgs e)
         {
