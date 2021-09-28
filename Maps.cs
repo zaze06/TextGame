@@ -8,14 +8,16 @@ namespace TextGame
 		public Map[] maps {get; set;}
 
 		public Maps(){
-			maps = new Map[]{new Map()};
+			Console.Write("[MAPS]Default constructor\r\n");
+			maps = new Map[0];//{new Map()};
+			Console.Write("[MAPS]End constructor\r\n");
 		}
 
 		public string toString(){
 			string output = "{";
 			for(int i = 0; i < maps.GetLength(0); i++){
 				
-				output += maps[i].ToString()+(i != maps.GetLength(0)-1?",":"");
+				output += maps[i].toString()+(i != maps.GetLength(0)-1?",":"");
 			}
 			output += "}";
 			return output;

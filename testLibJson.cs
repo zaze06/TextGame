@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using Newtonsoft.Json;
+using System.Reflection;
+using System.IO;
+using System;
+using System.Collections.Generic;
+using TextGame;
 
-namespace TextGame
+namespace Test
 {
-    public class Test
+    public class testLibJson
     {
-
-        
-
-        public Test()
-        {
-            Map[] maps = new Map[]{new Map()};
-            maps[0] = (new Map
+        static void Main1(){
+            Map list1 = new Map
             {
                 map = Util.convertIntArrayToMap(new int[,]{
                     { 7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7},
@@ -43,26 +39,16 @@ namespace TextGame
                         ConsoleColor.White, ConsoleColor.DarkMagenta, ConsoleColor.Cyan, ConsoleColor.Cyan, ConsoleColor.Cyan, ConsoleColor.Cyan,
                         ConsoleColor.Black, ConsoleColor.Blue, ConsoleColor.Blue})),
                 startPosition = Util.convertIntArrayToList(new int[2] { 1, 1 })
-            });
-
-            Maps maps1 = new Maps
-            {
-                maps = maps
             };
 
-            string path = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "/maps.json";
+            string path = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "/Maps.json";
 
-            File.WriteAllText(path, JsonConvert.SerializeObject(maps1));
-
-            using (StreamWriter file = File.CreateText(path))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, maps1);
-            }
-        }
-        static void Main1()
-        {
-            new Test();
+            File.WriteAllText(path, JsonConvert.SerializeObject(list1));
+            list1 = null;
+            string str = File.ReadAllText(System.IO.Path.GetDirectoryName
+                (Assembly.GetEntryAssembly().Location) + "/Maps.json");
+            list1 = JsonConvert.DeserializeObject<Map>(str);
+            Console.Write(list1.toString());
         }
     }
 }

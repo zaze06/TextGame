@@ -22,12 +22,13 @@ namespace TextGame
 				}
 				map.Add(tmp);
 			}
+			Console.Write("[MAP]Default constructor\r\n");
 
 			for(int i = 0; i < 20; i++){
 				color.Add(0);
 			}
 
-			for(int i = 0; i < 20; i++){
+			for(int i = 0; i < 2; i++){
 				startPosition.Add(0);
 			}
 		}

@@ -18,6 +18,8 @@ namespace TextGame
         public int mapSizeY = 0;
         public int lifes = 5;
         public static int playerX = map3.startPosition[0];
+
+        public string infoString = "";
         public static int playerY = map3.startPosition[1];
         public int renderDistend = 1;
         public bool makeMap = false;
@@ -273,7 +275,7 @@ namespace TextGame
             }*/
             else if (key == ConsoleKey.Escape)
             {
-                if (!mapEqual(/*Util.convertMapToIntArray(GetMaps.getMap(lvl).map)*/GetMaps.getMap(lvl), map))
+                if (!mapEqual(/*Util.convertMapToIntArray(GetMaps.getMap(lvl).map)/*/GetMaps.getMap(lvl)/**/, map))
                 {
                     ConsoleColor forgrund = Console.ForegroundColor;
                     ConsoleColor backgrund = Console.BackgroundColor;
@@ -358,13 +360,12 @@ namespace TextGame
 
         bool wasOnSpecial = false;
         bool wasOnDmg = false;
-        
         private void writeMap(bool doTp)
         {
             Console.SetCursorPosition(0, 1);
             int[] tpX = {-1, -1};
             int[] tpY = {-1, -1};
-            bool playerOnTp = false;
+            bool[] playerOnTp = {false, false};
             if(lifes == 0 && doTp){
                 lifes = 5;
                 loadMap(0);
@@ -440,25 +441,28 @@ namespace TextGame
                                     playerX = tpX[0];
                                     playerY = tpY[0];
                                     playerWasOnTp = true;
+                                    infoString += "n8 m; ";
                                 }
                                 else
                                 {
                                     //writeMap(false);
-                                    playerOnTp = true;
+                                    playerOnTp[0] = true;
                                 }
                             }
                             else
                             {
                                 tpX[0] = x;
                                 tpY[0] = y;
+//                                infoString += "n8 c; ";
                             }
-                            if (playerOnTp)
+                            if (playerOnTp[0])
                             {
                                 if (tpX[0] != -1 && tpY[0] != -1)
                                 {
                                     playerX = tpX[0];
                                     playerY = tpY[0];
                                     playerWasOnTp = true;
+                                    infoString += "n8 n; ";
                                 }
                             }
                         }else{
@@ -480,17 +484,22 @@ namespace TextGame
                                     playerX = tpX[1];
                                     playerY = tpY[1];
                                     playerWasOnTp = true;
+                                    infoString += "nA m; ";
                                 }
                                 else
                                 {
                                     //writeMap(false);
-                                    playerOnTp = true;
+                                    playerOnTp[1] = true;
                                 }
                             }
                             else
                             {
                                 tpX[1] = x;
                                 tpY[1] = y;
+//                                infoString += "nA c; ";
+                            }
+                            if(playerOnTp[1]) {
+                                infoString += "nA n; ";
                             }
                             /*if (playerOnTp)
                             {
@@ -593,11 +602,15 @@ namespace TextGame
                 //Console.WriteLine("\nX[0] = "+tpX[0]+": Y[0] = "+tpY[0]);
                 //Console.WriteLine("X[1] = "+tpX[1]+": Y[1] = "+tpY[1]);
             }
+            /*for(int i = 0; i < 20; i++){
+                Console.Write("");
+            }
+            Console.Write("\n"+infoString);*/
         }
 
         private void loadMap(int lvl1){
             //Map map = GetMaps.getMap(lvl1);
-            map = GetMaps.getMap(lvl1);
+            //map = GetMaps.getMap(lvl1);
             playerX = playerX;//map.startPosition[0];
             playerY = playerY;//map.startPosition[1];
             colors = ColorMaps.colorMap(lvl1);//Util.convertIntArrayToColor(Util.convertListToIntArray(map.color));

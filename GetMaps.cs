@@ -7,21 +7,23 @@ namespace TextGame
 {
     public class GetMaps
     {
-        static Maps maps = new Maps();
+        static Maps maps;// = new Maps();
         public GetMaps()
         {
+            Console.Write("Start GetMaps\r\n");
             string str = File.ReadAllText(System.IO.Path.GetDirectoryName
-            (Assembly.GetEntryAssembly().Location) + "/maps.json");
+                (Assembly.GetEntryAssembly().Location) + "/Maps.json");
             maps = JsonConvert.DeserializeObject<Maps>(str);
             //Console.WriteLine(str);
-            Console.Write(maps);
+            Console.Write(maps.toString());
+            Console.Write("HEJHEJ");
             Environment.Exit(0);
         }
 
-        public static /*Map*/ int[,] getMap(int v)
+        public static /*Map/*/ int[,]/**/ getMap(int v)
         {
             //return maps.maps[v];
-            
+            /**/
             switch (v){
                 case 0: return new int[20,20]
                     {
@@ -118,15 +120,15 @@ namespace TextGame
                 case 4: return new int[20, 20]
                     {
                         {7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7},
-                        {7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7},
-                        {7,0,0,0,0,0,0,0,0,0,7,7,7,7,7,0,0,0,0,7},
-                        {7,0,0,0,0,0,0,0,0,0,7,0,8,0,7,0,0,0,0,7},
-                        {7,0,0,0,0,0,0,0,0,7,17,7,17,7,17,0,0,0,0,7},
-                        {7,0,0,0,0,0,0,0,0,0,11,16,11,16,11,0,0,0,0,7},
-                        {7,0,0,0,0,0,0,0,0,7,14,7,14,7,14,7,0,0,0,7},
-                        {7,18,0,0,0,0,0,0,0,7,0,0,0,0,0,7,0,0,0,7},
-                        {7,13,7,7,7,7,7,7,7,7,7,7,14,7,7,7,7,7,0,7},
-                        {7,0,0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,7},
+                        {7,0,11,16,8,16,16,16,11,0,0,0,0,0,0,7,0,0,0,7},
+                        {7,0,11,16,16,16,16,16,11,0,7,7,7,7,14,7,0,0,0,7},
+                        {7,0,11,16,16,16,16,16,11,0,7,7,7,7,0,7,0,0,0,7},
+                        {7,13,7,7,7,7,7,7,7,7,17,7,17,7,17,7,0,0,0,7},
+                        {7,0,10,0,0,0,0,0,0,0,11,16,11,16,11,7,0,0,0,7},
+                        {7,0,7,7,7,7,7,7,7,7,14,7,14,7,14,7,0,0,0,7},
+                        {7,18,7,0,0,0,0,0,0,7,0,0,0,0,0,7,0,0,0,7},
+                        {7,13,7,7,7,7,7,7,7,7,7,7,14,7,7,7,7,7,7,7},
+                        {7,0,0,0,0,0,0,0,0,0,7,7,0,0,0,0,0,0,0,7},
                         {7,14,7,7,7,7,7,7,7,13,7,7,7,7,7,7,7,7,0,7},
                         {7,13,11,16,16,16,11,0,7,0,12,16,16,16,16,17,7,7,0,7},
                         {7,13,11,16,16,16,11,0,7,0,12,16,16,16,16,17,7,7,0,7},
@@ -232,6 +234,7 @@ namespace TextGame
                     };
                 default: return new int[20, 20];
             }
+            /**/
         }
     }
 }
