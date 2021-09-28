@@ -1,6 +1,6 @@
 language: csharp
 mono: latest
-dotnet: 5.0.401
+dotnet: 5.0.10
 solution: Game.sln
 #before_install:
 #   - sudo snap install dotnet-sdk --classic --channel=5.0
