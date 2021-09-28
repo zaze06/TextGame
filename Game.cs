@@ -24,13 +24,13 @@ namespace TextGame
         public bool playerWasOnTp = false;
         public int[] walkibles = {0, 8, 9, 10, 15, 16, 17};
         public ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6,
-            ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.L, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R,
+            ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.K, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R,
             ConsoleKey.G, ConsoleKey.D};
         public ConsoleColor[] colors = Util.convertIntArrayToColor(Util.convertListToIntArray(map3.color));
         public string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "=", "|", "#"};
         public string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "+", "*", "H", "E", "L", "<", ">", "v", "^", "%", "=", "|", "#"};
         public string mapIcons = "0='-' : 1='|' : 2='/' : 3='\\' : 4='¯' : 5='_' : 6=' ' : 7='*' : H='H'(Teleport must have 2 to work no more no less) : " +
-            "8='E'(End point) : L='-'(Same as 'H' but difrent) : <='<'(a one way door can go thru the big end) : " +
+            "8='E'(End point) : K='-'(Same as 'H' but difrent) : <='<'(a one way door can go thru the big end) : " +
             "O='>'(a one way door can go thru the big end) : U='v'(a one way door can go thru the big end) : " +
             "I='^'(a one way door can go thru the big end) : Y=' '(same as 6 but walkible) :" +
             " R='='(a walk way that only posible to walk anong side cant go up or down on it) : "+
@@ -67,10 +67,10 @@ namespace TextGame
             //Environment.Exit(0);
             while (true)
             {
-                writeMap();
-                if(wasOnSpecial) writeMap();
+                writeMap(true);
+                if(wasOnSpecial) writeMap(true);
                 keyPress();
-                if(playerWasOnTp) writeMap();
+                if(playerWasOnTp) writeMap(true);
             }
         }
 
@@ -236,8 +236,22 @@ namespace TextGame
                     Console.SetCursorPosition(0, mapSizeY + 1);
                     Console.Write(" ");
                     Console.SetCursorPosition(0, mapSizeY + 2);
-                    loadMap(int.Parse(Console.ReadKey().KeyChar + ""));
-                    Console.BackgroundColor = colors[1];
+                    try{
+                        loadMap(int.Parse(Console.ReadKey().KeyChar + ""));
+                        Console.BackgroundColor = colors[1];
+                    }catch(Exception e){
+                        e.ToString();
+                    }
+                }
+                else if(key == ConsoleKey.L){
+                    Console.SetCursorPosition(0, mapSizeY + 1);
+                    Console.Write(" ");
+                    Console.SetCursorPosition(0, mapSizeY + 2);
+                    try{
+                        lifes = (int.Parse(Console.ReadKey().KeyChar + ""));
+                    }catch(Exception e){
+                        e.ToString();
+                    }
                 }
                 else if (key == ConsoleKey.NumPad0)
                 {
@@ -345,13 +359,13 @@ namespace TextGame
         bool wasOnSpecial = false;
         bool wasOnDmg = false;
         
-        private void writeMap()
+        private void writeMap(bool doTp)
         {
             Console.SetCursorPosition(0, 1);
             int[] tpX = {-1, -1};
             int[] tpY = {-1, -1};
             bool playerOnTp = false;
-            if(lifes == 0){
+            if(lifes == 0 && doTp){
                 lifes = 5;
                 loadMap(0);
                 lvl = 0;
@@ -359,7 +373,7 @@ namespace TextGame
                 Console.Write("Level " + (lvl - 1) + " compleat. Curent lvl " + lvl);
                 playerX = 1;
                 playerY = 1;
-                writeMap();
+                writeMap(true);
                 return;
             }
             Console.Write("You have "+lifes+" lifes left\n");
@@ -396,7 +410,11 @@ namespace TextGame
                             Console.SetCursorPosition(0, 0);
                             Console.Write("Level " + (lvl - 1) + " compleat. Curent lvl " + lvl);
                             loadMap(lvl);
-                            writeMap();
+                            if(mapEqual(map, new int[20,20]))
+                            {
+
+                            }
+                            writeMap(true);
                             return;
                         }
                         if(num == 18 && !makeMap && !wasOnDmg){
@@ -411,7 +429,7 @@ namespace TextGame
                         endY = y;
                         wasOnSpecial = true;
                     }
-                    else if(num == 8)
+                    else if(num == 8 && doTp)
                     {
                         if (!playerWasOnTp && !makeMap)
                         {
@@ -425,6 +443,7 @@ namespace TextGame
                                 }
                                 else
                                 {
+                                    //writeMap(false);
                                     playerOnTp = true;
                                 }
                             }
@@ -450,7 +469,7 @@ namespace TextGame
                         tpY[0] = tmp[1];
                         playerOnTp = tmp[2]==1;*/
                     }
-                    else if(num == 10)
+                    else if(num == 10 && doTp)
                     {
                         if (!playerWasOnTp && !makeMap)
                         {
@@ -464,6 +483,7 @@ namespace TextGame
                                 }
                                 else
                                 {
+                                    //writeMap(false);
                                     playerOnTp = true;
                                 }
                             }
@@ -472,7 +492,7 @@ namespace TextGame
                                 tpX[1] = x;
                                 tpY[1] = y;
                             }
-                            if (playerOnTp)
+                            /*if (playerOnTp)
                             {
                                 if (tpX[1] != -1 && tpY[1] != -1)
                                 {
@@ -480,7 +500,7 @@ namespace TextGame
                                     playerY = tpY[1];
                                     playerWasOnTp = true;
                                 }
-                            }
+                            }*/
                         }else{
                             playerWasOnTp = false;
                         }
@@ -528,14 +548,24 @@ namespace TextGame
                     else if((map[playerX, playerY] == 16) && (map[x, y] != 16) && (!makeMap))
                     {
                         icon = " ";
-                        if ((y > playerY || y < playerY) && !(x < playerX || x > playerX)) icon = this.icons[num];
+                        if (((y > playerY || y < playerY) && ((y <= playerY + renderDistend && y >= playerY - renderDistend))) && !(x < playerX || x > playerX)) icon = this.icons[num];
                         
                     }else if ((map[playerX, playerY] == 16) && (x > playerX || x < playerX) && !makeMap) icon = " ";
-                    Console.Write(icon);
+                    else if((map[playerX, playerY] == 17) && (map[x, y] != 17 && (!makeMap)))
+                    {
+                        icon = " ";
+                        if ((!(y > playerY || y < playerY)) && ((x < playerX || x > playerX) && (x <= playerX + renderDistend && x >= playerX - renderDistend))) icon = this.icons[num];
+                        
+                    }else if ((map[playerX, playerY] == 17) && (x > playerX || x < playerX) && !makeMap) icon = " ";
+                    if(doTp){
+                        Console.Write(icon);
+                    }
                 }
-                Console.Write("\n");
+                if(doTp){
+                    Console.Write("\n");
+                }
             }
-            if (makeMap)
+            if (makeMap && doTp)
             {
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.ForegroundColor = ConsoleColor.White;
@@ -543,7 +573,7 @@ namespace TextGame
                 Console.WriteLine(mapIcons);
                 Console.WriteLine(commands);
             }
-            else
+            else if (!makeMap && doTp)
             {
                 
                 for (int i = 0; i < 25; i++)
@@ -618,7 +648,7 @@ namespace TextGame
             PlatformID p = Environment.OSVersion.Platform;
             Console.WriteLine(p);
             Console.WriteLine(p);
-            if(p == PlatformID.MacOSX)
+            /*if(p == PlatformID.MacOSX)
             {
                 return "~/Library/Application\\ Support/Zacharias/TextGame";
             }else if(p == PlatformID.Win32NT)
@@ -629,9 +659,9 @@ namespace TextGame
                 return Path.Combine("C:", "Users", user.Split('\\')[1], "Documents","MyGames","Zacharias","TextGame");
             }
             else
-            {
+            {*/
                 return System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "/data";
-            }
+            //}
         }
         static void OnProcessExit(object sender, EventArgs e)
         {
