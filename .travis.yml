@@ -3,4 +3,4 @@ mono: latest
 dotnet: 5.0.401
 solution: Game.sln
 before_install:
-   - sudo dpkg install dotnet-sdk
+   - sudo apt install dotnet-sdk
