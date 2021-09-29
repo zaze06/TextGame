@@ -13,7 +13,7 @@ This is a game thats you run in terminal.
             1. Make sure that the macOS tab is selected
             2. Click on download mono [Version] (Stable channel)
         2. Windows
-            - (skip to step 2.1.2.6 if you know if you'r os is 64 or 32 bit)
+            - (skip to step 2.i.b.f if you know if you'r os is 64 or 32 bit)
             1. Open setting
             2. Click on System
             3. Click on Abot
