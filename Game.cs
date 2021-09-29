@@ -610,7 +610,7 @@ namespace TextGame
 
         private void loadMap(int lvl1){
             //Map map = GetMaps.getMap(lvl1);
-            //map = GetMaps.getMap(lvl1);
+            map = GetMaps.getMap(lvl1);
             playerX = playerX;//map.startPosition[0];
             playerY = playerY;//map.startPosition[1];
             colors = ColorMaps.colorMap(lvl1);//Util.convertIntArrayToColor(Util.convertListToIntArray(map.color));
