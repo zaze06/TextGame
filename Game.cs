@@ -16,7 +16,7 @@ namespace TextGame
         public int endY = 18;
         public int mapSizeX = 0;
         public int mapSizeY = 0;
-        public int lifes = 5;
+        public int lives = 5;
         public static int playerX = map3.startPosition[0];
 
         public string infoString = "";
@@ -31,14 +31,17 @@ namespace TextGame
         public ConsoleColor[] colors = Util.convertIntArrayToColor(Util.convertListToIntArray(map3.color));
         public string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "=", "|", "#"};
         public string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "+", "*", "H", "E", "L", "<", ">", "v", "^", "%", "=", "|", "#"};
-        public string mapIcons = "0='-' : 1='|' : 2='/' : 3='\\' : 4='¯' : 5='_' : 6=' ' : 7='*' : H='H'(Teleport must have 2 to work no more no less) : " +
-            "8='E'(End point) : K='-'(Same as 'H' but difrent) : <='<'(a one way door can go thru the big end) : " +
-            "O='>'(a one way door can go thru the big end) : U='v'(a one way door can go thru the big end) : " +
-            "I='^'(a one way door can go thru the big end) : Y=' '(same as 6 but walkible) :" +
+        public string mapIcons = "0='-' : 1='|' : 2='/' : 3='\\' : 4='¯' : 5='_' : 6=' ' : 7='*' : " + 
+            "H='H'(Teleport must have 2 to work no more no less) : "+
+            "8='E'(End point) : K='L'(Same as 'H' but difrent) : <='<'(a one way door can go thru the big end) : "+
+            "O='>'(a one way door can go thru the big end) : U='v'(a one way door can go thru the big end) : "+
+            "I='^'(a one way door can go thru the big end) : Y=' '(same as 6 but walkible) :"+
             " R='='(a walk way that only posible to walk anong side cant go up or down on it) : "+
             "G='|'(a walk way thay only posible to walk along side cant go left or right on it) : "+
             "D='#'(a point that you tack one dmg when you walk on it)";
-        public string commands = "C='clear' : F1='export map'";
+        public string commands = "C='clear' : F1='export map' : "+
+        "M+(map id)+Enter='so (map id) stands for the id of the map so if you press M+4+Enter it will open map 4 end whit enter'"+
+        "L+(lives)+Enter='so (lives) is a number of how many lives you whana give your self end whit enter'";
         private int lastTile = 0;
 
         static void Main(string[] args)
@@ -235,22 +238,47 @@ namespace TextGame
                 }
                 else if (key == ConsoleKey.M)
                 {
-                    Console.SetCursorPosition(0, mapSizeY + 1);
-                    Console.Write(" ");
-                    Console.SetCursorPosition(0, mapSizeY + 2);
+                    string lvl = "";
+                    do
+                    {
+                        Console.SetCursorPosition(0, mapSizeY + 1);
+                        Console.Write(" ");
+                        Console.SetCursorPosition(0, mapSizeY + 2);
+                        ConsoleKeyInfo key1 = Console.ReadKey();
+                        if(key1.Key == ConsoleKey.Enter){
+                            break;
+                        }else{
+                            lvl += key1.KeyChar;
+                        }
+                    } while (true);
+
                     try{
-                        loadMap(int.Parse(Console.ReadKey().KeyChar + ""));
+                        
+                        loadMap(int.Parse(lvl + ""));
                         Console.BackgroundColor = colors[1];
                     }catch(Exception e){
                         e.ToString();
                     }
                 }
                 else if(key == ConsoleKey.L){
-                    Console.SetCursorPosition(0, mapSizeY + 1);
-                    Console.Write(" ");
-                    Console.SetCursorPosition(0, mapSizeY + 2);
+                    string lives = "";
+                    do
+                    {
+                        Console.SetCursorPosition(0, mapSizeY + 1);
+                        Console.Write(" ");
+                        Console.SetCursorPosition(0, mapSizeY + 2);
+                        ConsoleKeyInfo key1 = Console.ReadKey();
+                        if(key1.Key == ConsoleKey.Enter){
+                            break;
+                        }else{
+                            lives += key1.KeyChar;
+                        }
+                    } while (true);
+                    
                     try{
-                        lifes = (int.Parse(Console.ReadKey().KeyChar + ""));
+                        
+                        this.lives = int.Parse(lives);
+                        Console.BackgroundColor = colors[1];
                     }catch(Exception e){
                         e.ToString();
                     }
@@ -366,8 +394,8 @@ namespace TextGame
             int[] tpX = {-1, -1};
             int[] tpY = {-1, -1};
             bool[] playerOnTp = {false, false};
-            if(lifes == 0 && doTp){
-                lifes = 5;
+            if(lives == 0 && doTp){
+                lives = 5;
                 loadMap(0);
                 lvl = 0;
                 Console.SetCursorPosition(0, 0);
@@ -377,7 +405,7 @@ namespace TextGame
                 writeMap(true);
                 return;
             }
-            Console.Write("You have "+lifes+" lifes left\n");
+            Console.Write("You have "+lives+" lives left\n");
             for (int x = 0; x < mapSizeX; x++)
             {
                 for (int y = 0; y < mapSizeY; y++)
@@ -420,7 +448,7 @@ namespace TextGame
                         }
                         if(num == 18 && !makeMap && !wasOnDmg){
                             wasOnDmg = true;
-                            lifes--;
+                            lives--;
                         }else{
                             wasOnDmg = false;
                         }
