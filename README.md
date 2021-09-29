@@ -1,6 +1,10 @@
 ![travis](https://app.travis-ci.com/zaze06/TextGame.svg?branch=master)
 # TextGame
 This is a game thats you run in terminal.
+
+# Sublit new maps as issues
+- Folow the template maps
+
 # Run releases
 1. Download the Game
     - OPS if you whant to build from the latest commitment you need to folow the build instructions below
