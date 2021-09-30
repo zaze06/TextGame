@@ -75,9 +75,12 @@ namespace TextGame
             while (true)
             {
                 writeMap(true);
-                if(wasOnSpecial) writeMap(true);
+                Console.Write("A");
+                if(wasOnSpecial) { writeMap(true);
+                Console.Write("B");}
                 keyPress();
-                if(playerWasOnTp) writeMap(true);
+                if(playerWasOnTp) {writeMap(true);
+                Console.Write("C");}
             }
         }
 
@@ -97,6 +100,7 @@ namespace TextGame
             Console.SetCursorPosition(0, mapSizeY + 10);
             ConsoleKeyInfo rawKey = Console.ReadKey();
             ConsoleKey key = rawKey.Key;
+            //Console.Clear();
             if (key == ConsoleKey.UpArrow && playerX > 0)
             {
                 if (makeMap)
@@ -296,10 +300,13 @@ namespace TextGame
                         if (key == keyIcons[i])
                         {
                             map[playerX, playerY] = i;
+                            break;
                         }
                     }
                 }else if(customTiles != null){
+                    Console.Write("\r\n\r\n\r\nCT "+customTiles.Length);
                     for(int i = 0; i < customTiles.Length; i++){
+                        Console.Write(i+" ");
                         if(customTiles[i].getPlaceKey() == key){
                             map[playerX, playerY] = customTiles[i].getId();
                             break;
@@ -421,9 +428,11 @@ namespace TextGame
             {
                 for (int y = 0; y < mapSizeY; y++)
                 {
+                    //Console.Write(x+" "+y+" ", Console.Error);
                     int num = map[x, y];
                     string icon = num.ToString();
                     if (x == playerX && y == playerY) {
+                        //Console.Write("436 ", Console.Error);
                         if (num == 9 && !makeMap)
                         {
                             /*if (!mapEqual(/*Util.convertMapToIntArray(GetMaps.getMap(lvl).map)*//*GetMaps.getMap(lvl), map))
@@ -465,12 +474,14 @@ namespace TextGame
                         }
                     }
                     if(num == 9){
+                        //Console.Write("478 ", Console.Error);
                         endX = x;
                         endY = y;
                         wasOnSpecial = true;
                     }
                     else if(num == 8 && doTp)
                     {
+                        //Console.Write("485 ", Console.Error);
                         if (!playerWasOnTp && !makeMap)
                         {
                             if(x == playerX && y == playerY)
@@ -514,6 +525,7 @@ namespace TextGame
                     }
                     else if(num == 10 && doTp)
                     {
+                        //Console.Write("529 ", Console.Error);
                         if (!playerWasOnTp && !makeMap)
                         {
                             if(x == playerX && y == playerY)
@@ -559,6 +571,7 @@ namespace TextGame
                     }
                     try
                     {
+                        //Console.Write("575 ", Console.Error);
                         Console.ForegroundColor = colors[num + 2];
                         if (num == 6 || num == 15)
                         {
@@ -571,7 +584,10 @@ namespace TextGame
                     }
                     try
                     {
+                        //Console.Write("588 ", Console.Error);
+                        //Console.Write("customTiles loop "+customTiles.Length);
                         for(int i = 0; i < customTiles.Length; i++){
+                            //Console.Write(" "+i);
                             if(customTiles[i].getId() == num){
                                 icon = customTiles[i].placeTile(makeMap);
                                 break;
@@ -590,6 +606,7 @@ namespace TextGame
                     }
                     if (x == playerX && y == playerY)
                     {
+                        //Console.Write("610 ", Console.Error);
                         Console.ForegroundColor = colors[0];
                         icon = "&";
                     }
@@ -607,17 +624,20 @@ namespace TextGame
                             ((x <= endX + renderDistend && x >= endX - renderDistend) && 
                             (y <= endY + renderDistend && y >= endY - renderDistend))))
                     {
+                        //Console.Write("625 ", Console.Error);
                         if (!makeMap) icon = " ";
                     }
                     
                     else if((map[playerX, playerY] == 16) && (map[x, y] != 16) && (!makeMap))
                     {
+                        //Console.Write("630 ", Console.Error);
                         icon = " ";
                         if (((y > playerY || y < playerY) && ((y <= playerY + renderDistend && y >= playerY - renderDistend))) && !(x < playerX || x > playerX)) icon = this.icons[num];
                         
                     }else if ((map[playerX, playerY] == 16) && (x > playerX || x < playerX) && !makeMap) icon = " ";
                     else if((map[playerX, playerY] == 17) && (map[x, y] != 17 && (!makeMap)))
                     {
+                        //Console.Write("637 ", Console.Error);
                         icon = " ";
                         if ((!(y > playerY || y < playerY)) && ((x < playerX || x > playerX) && (x <= playerX + renderDistend && x >= playerX - renderDistend))) icon = this.icons[num];
                         
@@ -626,21 +646,24 @@ namespace TextGame
                         Console.Write(icon);
                     }
                 }
+                //Console.WriteLine("", Console.Error);
                 if(doTp){
                     Console.Write("\n");
                 }
             }
             if (makeMap && doTp)
             {
+                //Console.Write("652 ", Console.Error);
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Curent pice: '" + this.icons[map[playerX, playerY]] + "' id: " + map[playerX, playerY]+ "  ");
+                Console.WriteLine("Curent pice: '" + getIcon(map[playerX, playerY]) + "' id: " + map[playerX, playerY]+ "  ");
                 Console.WriteLine(mapIcons);
                 Console.WriteLine(commands);
+                //Console.Write("652 End");
             }
             else if (!makeMap && doTp)
             {
-                
+                //Console.Write("661 ", Console.Error);
                 for (int i = 0; i < 25; i++)
                 {
                     Console.Write(" ");
@@ -662,6 +685,22 @@ namespace TextGame
                 Console.Write("");
             }
             Console.Write("\n"+infoString);*/
+            //Console.WriteLine("NEW MAP", Console.Error);
+        }
+
+        public string getIcon(int id){
+            if(!(id >= icons.Length)){
+                return icons[id];
+            }
+            else if(Util.containsId(customTiles, id))
+            {
+                for(int i = 0; i < customTiles.Length; i++){
+                    if(id == customTiles[i].getId()){
+                        return customTiles[i].getIcon();
+                    }
+                }
+            }
+            return "?";
         }
 
         private void loadMap(int lvl1){
