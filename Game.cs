@@ -18,7 +18,6 @@ namespace TextGame
         public int mapSizeY = 0;
         public int lives = 5;
         public int playerX = map3.startPosition[0];
-
         public string infoString = "";
         public int playerY = map3.startPosition[1];
         public int renderDistend = 1;
@@ -30,6 +29,7 @@ namespace TextGame
             ConsoleKey.G, ConsoleKey.D};
 
         public static CustomTile[] customTiles;
+        public readonly CustomTile[] defualtTiles = {new StartTile()};
         public ConsoleColor[] colors = Util.convertIntArrayToColor(Util.convertListToIntArray(map3.color));
         public string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "=", "|", "#"};
         public string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "+", "*", "H", "E", "L", "<", ">", "v", "^", "%", "=", "|", "#"};
@@ -721,7 +721,23 @@ namespace TextGame
 
         private void loadMap(int lvl1){
             //Map map = GetMaps.getMap(lvl1);
+            customTiles = null;
             map = GetMaps.getMap(lvl1);
+
+            int max = defualtTiles.Length;
+            if(customTiles != null){
+                max += customTiles.Length;
+            }
+            CustomTile[] tmp = customTiles;
+            customTiles = new CustomTile[max];
+            for(int i = 0; i < max; i++){
+                if(i >= tmp.Length){
+                    customTiles[i] = tmp[i];
+                }else{
+                    customTiles[i] = defualtTiles[i];
+                }
+            }
+            
             playerX = playerX;//map.startPosition[0];
             playerY = playerY;//map.startPosition[1];
             colors = ColorMaps.colorMap(lvl1);//Util.convertIntArrayToColor(Util.convertListToIntArray(map.color));
