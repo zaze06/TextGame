@@ -1,18 +1,18 @@
 using System;
-using TextGame;
 
 namespace TextGame
 {
-    public class TestTile : CustomTile
+    public class StartTile : CustomTile
     {
+        bool alradyLoaded = false;
         public ConsoleKey getPlaceKey(){
-            return ConsoleKey.B;
+            return ConsoleKey.S;
         }
         public string getDevIcon(){
-            return "B";
+            return "S";
         }
         public string getIcon(){
-            return "B";
+            return "-";
         }
         public int getId(){
             return 30;
@@ -27,6 +27,11 @@ namespace TextGame
             }
         }
         public string placeTile(int x, int y, bool dev, Game game){
+            if(!alradyLoaded && !dev){
+                game.playerX = x;
+                game.playerY = y;
+                alradyLoaded = true;
+            }
             if(dev) return getDevIcon();
             return getIcon();
         }
