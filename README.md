@@ -1,6 +1,7 @@
 ![travis](https://app.travis-ci.com/zaze06/TextGame.svg?branch=master)
 # TextGame
 This is a game thats you run in terminal.
+downloadible from [itch.io](https://alienomdia.itch.io/textgame)
 
 # Sublit new maps as issues
 - Folow the template maps
