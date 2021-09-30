@@ -18,10 +18,13 @@ namespace TextGame
             return 30;
         }
         public ConsoleColor getColor(){
-            return ConsoleColor.DarkGray;
+            return (ConsoleColor.DarkBlue);
         }
         public void playerOnTop(int x, int y, Game game){
-            
+            if(!game.makeMap){
+                game.playerX = (int)(new Random().NextDouble()*20);
+                game.playerY = (int)(new Random().NextDouble()*20);
+            }
         }
         public string placeTile(bool dev){
             if(dev) return getDevIcon();

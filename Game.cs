@@ -17,10 +17,10 @@ namespace TextGame
         public int mapSizeX = 0;
         public int mapSizeY = 0;
         public int lives = 5;
-        public static int playerX = map3.startPosition[0];
+        public int playerX = map3.startPosition[0];
 
         public string infoString = "";
-        public static int playerY = map3.startPosition[1];
+        public int playerY = map3.startPosition[1];
         public int renderDistend = 1;
         public bool makeMap = false;
         public bool playerWasOnTp = false;
@@ -75,12 +75,12 @@ namespace TextGame
             while (true)
             {
                 writeMap(true);
-                Console.Write("A");
-                if(wasOnSpecial) { writeMap(true);
-                Console.Write("B");}
+                //Console.Write("A");
+                if(wasOnSpecial)  writeMap(true);
+                //Console.Write("B");}
                 keyPress();
-                if(playerWasOnTp) {writeMap(true);
-                Console.Write("C");}
+                if(playerWasOnTp) writeMap(true);
+                //Console.Write("C");}
             }
         }
 
@@ -304,9 +304,9 @@ namespace TextGame
                         }
                     }
                 }else if(customTiles != null){
-                    Console.Write("\r\n\r\n\r\nCT "+customTiles.Length);
+                    //Console.Write("\r\n\r\n\r\nCT "+customTiles.Length);
                     for(int i = 0; i < customTiles.Length; i++){
-                        Console.Write(i+" ");
+                        //Console.Write(i+" ");
                         if(customTiles[i].getPlaceKey() == key){
                             map[playerX, playerY] = customTiles[i].getId();
                             break;
@@ -399,6 +399,13 @@ namespace TextGame
                     return true;
                 }
             }
+            if(customTiles != null){
+                for(int j = 0; j < customTiles.Length; j++){
+                    if(v == customTiles[j].getId()){
+                        return true;
+                    }
+                }
+            }
             return false;
         }
 
@@ -432,6 +439,14 @@ namespace TextGame
                     int num = map[x, y];
                     string icon = num.ToString();
                     if (x == playerX && y == playerY) {
+                        if(customTiles != null){
+                            for(int i = 0; i < customTiles.Length; i++){
+                                if(num == customTiles[i].getId()){
+                                    customTiles[i].playerOnTop(x, y, this);
+                                    break;
+                                }
+                            }
+                        }
                         //Console.Write("436 ", Console.Error);
                         if (num == 9 && !makeMap)
                         {
@@ -584,39 +599,20 @@ namespace TextGame
                     }
                     try
                     {
-                        //Console.Write("588 ", Console.Error);
-                        //Console.Write("customTiles loop "+customTiles.Length);
-                        for(int i = 0; i < customTiles.Length; i++){
-                            //Console.Write(" "+i);
-                            if(customTiles[i].getId() == num){
-                                icon = customTiles[i].placeTile(makeMap);
-                                break;
-                            }
-                        }
-                        if (makeMap)
-                        {
-                            icon = this.devIcons[num];
-                        }
-                        else
-                        {
-                            icon = this.icons[num];
-                        }
+                        icon = getIcon(num, makeMap);
                     }catch(Exception e) {
-                        e.ToString();
+                        Console.Clear();
+                        Console.Write(e.ToString());
+                        Environment.Exit(1);
                     }
-                    if (x == playerX && y == playerY)
-                    {
-                        //Console.Write("610 ", Console.Error);
-                        Console.ForegroundColor = colors[0];
-                        icon = "&";
-                    }
+                    
                     /*if(x == playerX){
                         while(xMEnd == -1){
                             
                         }
                     }*/
                      if(num == 18){
-                        icon = this.icons[num];
+                        icon = getIcon(num, makeMap);
                     } else
                     if(!(((  x <= playerX + renderDistend && x >= playerX - renderDistend) && 
                             (y <= playerY + renderDistend && y >= playerY - renderDistend)) || 
@@ -632,16 +628,24 @@ namespace TextGame
                     {
                         //Console.Write("630 ", Console.Error);
                         icon = " ";
-                        if (((y > playerY || y < playerY) && ((y <= playerY + renderDistend && y >= playerY - renderDistend))) && !(x < playerX || x > playerX)) icon = this.icons[num];
+                        if (((y > playerY || y < playerY) && ((y <= playerY + renderDistend && y >= playerY - renderDistend))) && !(x < playerX || x > playerX)) icon = getIcon(map[playerX, playerY], makeMap);;
                         
                     }else if ((map[playerX, playerY] == 16) && (x > playerX || x < playerX) && !makeMap) icon = " ";
                     else if((map[playerX, playerY] == 17) && (map[x, y] != 17 && (!makeMap)))
                     {
                         //Console.Write("637 ", Console.Error);
                         icon = " ";
-                        if ((!(y > playerY || y < playerY)) && ((x < playerX || x > playerX) && (x <= playerX + renderDistend && x >= playerX - renderDistend))) icon = this.icons[num];
+                        if ((!(y > playerY || y < playerY)) && ((x < playerX || x > playerX) && (x <= playerX + renderDistend && x >= playerX - renderDistend))) icon = getIcon(map[playerX, playerY], makeMap);;
                         
                     }else if ((map[playerX, playerY] == 17) && (x > playerX || x < playerX) && !makeMap) icon = " ";
+
+                    if (x == playerX && y == playerY)
+                    {
+                        //Console.Write("610 ", Console.Error);
+                        Console.ForegroundColor = colors[0];
+                        icon = "&";
+                    }
+                    
                     if(doTp){
                         Console.Write(icon);
                     }
@@ -656,7 +660,7 @@ namespace TextGame
                 //Console.Write("652 ", Console.Error);
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Curent pice: '" + getIcon(map[playerX, playerY]) + "' id: " + map[playerX, playerY]+ "  ");
+                Console.WriteLine("Curent pice: '" + getIcon(map[playerX, playerY], false) + "' id: " + map[playerX, playerY]+ "  ");
                 Console.WriteLine(mapIcons);
                 Console.WriteLine(commands);
                 //Console.Write("652 End");
@@ -688,8 +692,20 @@ namespace TextGame
             //Console.WriteLine("NEW MAP", Console.Error);
         }
 
-        public string getIcon(int id){
-            if(!(id >= icons.Length)){
+        public string getIcon(int id, bool devMode){
+            if (devMode){
+                if(!(id >= icons.Length)){
+                    return devIcons[id];
+                }
+                else if(Util.containsId(customTiles, id))
+                {
+                    for(int i = 0; i < customTiles.Length; i++){
+                        if(id == customTiles[i].getId()){
+                            return customTiles[i].getDevIcon();
+                        }
+                    }
+                }
+            }else if(!(id >= icons.Length)){
                 return icons[id];
             }
             else if(Util.containsId(customTiles, id))
