@@ -6,7 +6,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace TextGame
 {
-    class Game
+    public class Game
     {
         //public static GetMaps maps = new GetMaps();
         public static int lvl = 0;
@@ -318,9 +318,9 @@ namespace TextGame
                     ConsoleColor backgrund = Console.BackgroundColor;
                     Console.BackgroundColor = ConsoleColor.Black;
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.SetCursorPosition(0, mapSizeY + 1);
+                    Console.SetCursorPosition(0, mapSizeY + 10);
                     Console.Write("OPS: Do you whana exit and discard chages? press esc again to conferm");
-                    Console.SetCursorPosition(0, mapSizeY + 2);
+                    Console.SetCursorPosition(0, mapSizeY + 11);
                     if (Console.ReadKey().Key == ConsoleKey.Escape)
                     {
                         Environment.Exit(0);
@@ -344,7 +344,7 @@ namespace TextGame
                 Console.SetCursorPosition(0, mapSizeY + 4);
                 //Console.Write(key.ToString());
             }
-            Console.SetCursorPosition(0, mapSizeY + 1);
+            Console.SetCursorPosition(0, mapSizeY + 10);
             Console.Write(" ");
         }
 
@@ -598,6 +598,9 @@ namespace TextGame
                             
                         }
                     }*/
+                     if(num == 18){
+                        icon = this.icons[num];
+                    } else
                     if(!(((  x <= playerX + renderDistend && x >= playerX - renderDistend) && 
                             (y <= playerY + renderDistend && y >= playerY - renderDistend)) || 
 
@@ -606,6 +609,7 @@ namespace TextGame
                     {
                         if (!makeMap) icon = " ";
                     }
+                    
                     else if((map[playerX, playerY] == 16) && (map[x, y] != 16) && (!makeMap))
                     {
                         icon = " ";

@@ -20,6 +20,9 @@ namespace TextGame
         public ConsoleColor getColor(){
             return ConsoleColor.DarkGray;
         }
+        public void playerOnTop(int x, int y, Game game){
+            
+        }
         public string placeTile(bool dev){
             if(dev) return getDevIcon();
             return getIcon();

@@ -9,8 +9,7 @@ namespace TextGame
         string getDevIcon();
         int getId();
         ConsoleColor getColor();
-
-
+        void playerOnTop(int x, int y, Game game);
         string placeTile(bool dev);
     }
 }
