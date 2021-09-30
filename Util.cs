@@ -80,6 +80,14 @@ namespace TextGame
 			}
 			return false;
 		}
+		public static bool containsId(CustomTile[] array, int id){
+			for(int i = 0; i < array.Length; i++){
+				if(id == array[i].getId()){
+					return true;
+				}
+			}
+			return false;
+		}
 		public static int[] consoleKeyArrayToIntArray(ConsoleKey[] array){
 			int[] tmp = new int[array.Length];
 			for(int i = 0; i < array.Length; i++){
