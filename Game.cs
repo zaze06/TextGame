@@ -390,21 +390,22 @@ namespace TextGame
         bool wasOnDmg = false;
         private void writeMap(bool doTp)
         {
-            Console.SetCursorPosition(0, 1);
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.SetCursorPosition(0, 0);
             int[] tpX = {-1, -1};
             int[] tpY = {-1, -1};
             bool[] playerOnTp = {false, false};
+
             if(lives == 0 && doTp){
                 lives = 5;
                 loadMap(0);
                 lvl = 0;
-                Console.SetCursorPosition(0, 0);
-                Console.Write("Level " + (lvl - 1) + " compleat. Curent lvl " + lvl);
                 playerX = 1;
                 playerY = 1;
                 writeMap(true);
                 return;
             }
+            Console.Write((lvl != 0?("Level " + (lvl-1) + " compleat. "):"")+"Curent lvl " + lvl + "\n");
             Console.Write("You have "+lives+" lives left\n");
             for (int x = 0; x < mapSizeX; x++)
             {

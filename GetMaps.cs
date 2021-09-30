@@ -16,7 +16,7 @@ namespace TextGame
             maps = JsonConvert.DeserializeObject<Maps>(str);
             //Console.WriteLine(str);
             Console.Write(maps.toString());
-            Console.Write("HEJHEJ");
+            //Console.Write("HEJHEJ");
             Environment.Exit(0);
         }
 
