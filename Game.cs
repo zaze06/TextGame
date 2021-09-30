@@ -28,6 +28,8 @@ namespace TextGame
         public ConsoleKey[] keyIcons = { ConsoleKey.D0, ConsoleKey.D1, ConsoleKey.D2, ConsoleKey.D3, ConsoleKey.D4, ConsoleKey.D5, ConsoleKey.D6,
             ConsoleKey.D7, ConsoleKey.H, ConsoleKey.D8, ConsoleKey.K, ConsoleKey.D9, ConsoleKey.O, ConsoleKey.U, ConsoleKey.I, ConsoleKey.Y, ConsoleKey.R,
             ConsoleKey.G, ConsoleKey.D};
+
+        public static CustomTile[] customTiles;
         public ConsoleColor[] colors = Util.convertIntArrayToColor(Util.convertListToIntArray(map3.color));
         public string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "=", "|", "#"};
         public string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "+", "*", "H", "E", "L", "<", ">", "v", "^", "%", "=", "|", "#"};
@@ -92,7 +94,7 @@ namespace TextGame
 
         private void keyPress()
         {
-            Console.SetCursorPosition(0, mapSizeY + 2);
+            Console.SetCursorPosition(0, mapSizeY + 10);
             ConsoleKeyInfo rawKey = Console.ReadKey();
             ConsoleKey key = rawKey.Key;
             if (key == ConsoleKey.UpArrow && playerX > 0)
@@ -287,13 +289,20 @@ namespace TextGame
                 {
                     map[playerX, playerY] = lastTile;
                 }
-                else
+                else if(Util.containArray(Util.consoleKeyArrayToIntArray(keyIcons), (int)key))
                 {
                     for (int i = 0; i < keyIcons.Length; i++)
                     {
                         if (key == keyIcons[i])
                         {
                             map[playerX, playerY] = i;
+                        }
+                    }
+                }else if(customTiles != null){
+                    for(int i = 0; i < customTiles.Length; i++){
+                        if(customTiles[i].getPlaceKey() == key){
+                            map[playerX, playerY] = customTiles[i].getId();
+                            break;
                         }
                     }
                 }
@@ -395,6 +404,7 @@ namespace TextGame
             int[] tpX = {-1, -1};
             int[] tpY = {-1, -1};
             bool[] playerOnTp = {false, false};
+            int xMEnd = -1;
 
             if(lives == 0 && doTp){
                 lives = 5;
@@ -561,6 +571,12 @@ namespace TextGame
                     }
                     try
                     {
+                        for(int i = 0; i < customTiles.Length; i++){
+                            if(customTiles[i].getId() == num){
+                                icon = customTiles[i].placeTile(makeMap);
+                                break;
+                            }
+                        }
                         if (makeMap)
                         {
                             icon = this.devIcons[num];
@@ -569,12 +585,19 @@ namespace TextGame
                         {
                             icon = this.icons[num];
                         }
-                    }catch(Exception e) { e.ToString(); }
+                    }catch(Exception e) {
+                        e.ToString();
+                    }
                     if (x == playerX && y == playerY)
                     {
                         Console.ForegroundColor = colors[0];
                         icon = "&";
                     }
+                    /*if(x == playerX){
+                        while(xMEnd == -1){
+                            
+                        }
+                    }*/
                     if(!(((  x <= playerX + renderDistend && x >= playerX - renderDistend) && 
                             (y <= playerY + renderDistend && y >= playerY - renderDistend)) || 
 
