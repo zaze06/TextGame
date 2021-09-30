@@ -3,6 +3,11 @@
 This is a game thats you run in terminal.
 downloadible from [itch.io](https://alienomdia.itch.io/textgame)
 
+pictures of the game 
+
+![icon](https://github.com/zaze06/TextGame/blob/master/resorces/icon.gif)
+![gamePlay](https://github.com/zaze06/TextGame/blob/master/resorces/gamePlay.gif)
+
 # Sublit new maps as issues
 - Folow the template maps
 
