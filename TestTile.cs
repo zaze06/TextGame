@@ -20,6 +20,9 @@ namespace TextGame
         public ConsoleColor getColor(){
             return ConsoleColor.DarkGray;
         }
+        public bool canWalkOn(){
+            return true;
+        }
         public void playerOnTop(int x, int y, Game game){
             
         }

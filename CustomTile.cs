@@ -8,6 +8,7 @@ namespace TextGame
         string getIcon();
         string getDevIcon();
         int getId();
+        bool canWalkOn();
         ConsoleColor getColor();
         void playerOnTop(int x, int y, Game game);
         string placeTile(bool dev);
