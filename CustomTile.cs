@@ -11,6 +11,6 @@ namespace TextGame
         bool canWalkOn();
         ConsoleColor getColor();
         void playerOnTop(int x, int y, Game game);
-        string placeTile(bool dev);
+        string placeTile(int x, int y, bool dev, Game game);
     }
 }
