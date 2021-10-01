@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <StartupObject>Game.cs</StartupObject>
+    <StartupObject>TextGame.Game</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

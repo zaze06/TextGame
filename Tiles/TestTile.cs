@@ -1,7 +1,6 @@
 using System;
-using TextGame;
 
-namespace TextGame
+namespace TextGame.Tiles
 {
     public class TestTile : CustomTile
     {
@@ -29,9 +28,8 @@ namespace TextGame
                 game.playerY = (int)(new Random().NextDouble()*20);
             }
         }
-        public string placeTile(int x, int y, bool dev, Game game){
-            if(dev) return getDevIcon();
-            return getIcon();
+        public void placeTile(int x, int y, bool dev, Game game){
+            
         }
     }
 }

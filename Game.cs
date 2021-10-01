@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
+using TextGame.Tiles;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace TextGame
@@ -30,7 +31,7 @@ namespace TextGame
 
         public static CustomTile[] customTiles;
         public readonly CustomTile[] defualtTiles = {new StartTile()};
-        public ConsoleColor[] colors = Util.convertIntArrayToColor(Util.convertListToIntArray(map3.color));
+        public static ConsoleColor[] colors = Util.convertIntArrayToColor(Util.convertListToIntArray(map3.color));
         public string[] icons = {"-", "|", "/", "\\", "¯", "_", " ", "*", "H", "E", "L", "<", ">", "v", "^", " ", "=", "|", "#"};
         public string[] devIcons = {"-", "|", "/", "\\", "¯", "_", "+", "*", "H", "E", "L", "<", ">", "v", "^", "%", "=", "|", "#"};
         public string mapIcons = "0='-' : 1='|' : 2='/' : 3='\\' : 4='¯' : 5='_' : 6=' ' : 7='*' : " + 
@@ -57,6 +58,22 @@ namespace TextGame
             //map3 = GetMaps.getMap(lvl);
             map = GetMaps.getMap(lvl);
             colors = ColorMaps.colorMap(lvl);
+
+            int max = defualtTiles.Length;
+            if(customTiles != null){
+                max += customTiles.Length;
+            }
+            CustomTile[] tmp = (CustomTile[])customTiles.Clone();
+            customTiles = new CustomTile[max];
+            for(int i = 0; i < max; i++){
+                //Console.Write(i+", ");
+                if(!(i >= tmp.Length)){
+                    customTiles[i] = tmp[i];
+                }else{
+                    customTiles[i] = defualtTiles[i-1];
+                }
+            }
+
             playerX = 1;
             playerY = 1;
             mapSizeX = map.GetLength(0);
@@ -72,6 +89,7 @@ namespace TextGame
             }
             Console.Write("W="+mapSizeX+" H="+mapSizeY+"\n");
             //Environment.Exit(0);
+            writeMap(false);
             while (true)
             {
                 writeMap(true);
@@ -260,7 +278,7 @@ namespace TextGame
 
                     try{
                         
-                        loadMap(int.Parse(lvl + ""));
+                        loadMap(int.Parse(lvl));
                         Console.BackgroundColor = colors[1];
                     }catch(Exception e){
                         e.ToString();
@@ -587,7 +605,7 @@ namespace TextGame
                     try
                     {
                         //Console.Write("575 ", Console.Error);
-                        Console.ForegroundColor = colors[num + 2];
+                        //Console.ForegroundColor = colors[num + 2];
                         if (num == 6 || num == 15)
                         {
                             Console.ForegroundColor = colors[2];
@@ -599,9 +617,10 @@ namespace TextGame
                     }
                     try
                     {
-                        icon = getIcon(num, makeMap);
+                        icon = getIcon(num, makeMap, true);
                     }catch(Exception e) {
                         Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.Write(e.ToString());
                         Environment.Exit(1);
                     }
@@ -611,31 +630,61 @@ namespace TextGame
                             
                         }
                     }*/
-                     if(num == 18){
-                        icon = getIcon(num, makeMap);
-                    } else
+                    //try{
+                    bool tmp = Util.containsId(customTiles, num);
+                    if(tmp){
+                        for(int i = 0; i < customTiles.Length; i++){
+                            if(customTiles[i].getId() == num){
+                                customTiles[i].placeTile(x, y, makeMap, this);
+                                break;
+                            }
+                        }
+                    }
+                    //}catch(Exception e){
+                        //e.ToString();
+                        //Console.Write("644");
+                        //Environment.Exit(1);
+                    //}
                     if(!(((  x <= playerX + renderDistend && x >= playerX - renderDistend) && 
                             (y <= playerY + renderDistend && y >= playerY - renderDistend)) || 
 
                             ((x <= endX + renderDistend && x >= endX - renderDistend) && 
                             (y <= endY + renderDistend && y >= endY - renderDistend))))
                     {
-                        //Console.Write("625 ", Console.Error);
                         if (!makeMap) icon = " ";
                     }
+                    if(customTiles != null){
+                        for(int i = 0; i < customTiles.Length; i++){
+                            tmp = customTiles[i] is CustomLightTile;
+                            if(tmp){
+                                CustomLightTile tile = (CustomLightTile) customTiles[i];
+                                if((((x <= tile.getX() + renderDistend && x >= tile.getX() - renderDistend) && 
+                                    (y <= tile.getY() + renderDistend && y >= tile.getY() - renderDistend))))
+                                {
+                                    if (!makeMap) icon = getIcon(num, makeMap, true);
+                                }else{
+                                    
+                                }
+                            }
+                            
+                        }
+                    }
                     
-                    else if((map[playerX, playerY] == 16) && (map[x, y] != 16) && (!makeMap))
+                    if(num == 18){
+                        icon = getIcon(num, makeMap, true);
+                    } else
+                    if((map[playerX, playerY] == 16) && (map[x, y] != 16) && (!makeMap))
                     {
                         //Console.Write("630 ", Console.Error);
                         icon = " ";
-                        if (((y > playerY || y < playerY) && ((y <= playerY + renderDistend && y >= playerY - renderDistend))) && !(x < playerX || x > playerX)) icon = getIcon(map[playerX, playerY], makeMap);;
+                        if (((y > playerY || y < playerY) && ((y <= playerY + renderDistend && y >= playerY - renderDistend))) && !(x < playerX || x > playerX)) icon = getIcon(map[playerX, playerY], makeMap, true);
                         
                     }else if ((map[playerX, playerY] == 16) && (x > playerX || x < playerX) && !makeMap) icon = " ";
                     else if((map[playerX, playerY] == 17) && (map[x, y] != 17 && (!makeMap)))
                     {
                         //Console.Write("637 ", Console.Error);
                         icon = " ";
-                        if ((!(y > playerY || y < playerY)) && ((x < playerX || x > playerX) && (x <= playerX + renderDistend && x >= playerX - renderDistend))) icon = getIcon(map[playerX, playerY], makeMap);;
+                        if ((!(y > playerY || y < playerY)) && ((x < playerX || x > playerX) && (x <= playerX + renderDistend && x >= playerX - renderDistend))) icon = getIcon(map[playerX, playerY], makeMap, true);
                         
                     }else if ((map[playerX, playerY] == 17) && (x > playerX || x < playerX) && !makeMap) icon = " ";
 
@@ -658,9 +707,9 @@ namespace TextGame
             if (makeMap && doTp)
             {
                 //Console.Write("652 ", Console.Error);
-                Console.BackgroundColor = ConsoleColor.Black;
+                //Console.BackgroundColor = ConsoleColor.Black;
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("Curent pice: '" + getIcon(map[playerX, playerY], false) + "' id: " + map[playerX, playerY]+ "  ");
+                Console.WriteLine("Curent pice: '" + getIcon(map[playerX, playerY], false, false) + "' id: " + map[playerX, playerY]+ "  ");
                 Console.WriteLine(mapIcons);
                 Console.WriteLine(commands);
                 //Console.Write("652 End");
@@ -692,26 +741,34 @@ namespace TextGame
             //Console.WriteLine("NEW MAP", Console.Error);
         }
 
-        public string getIcon(int id, bool devMode){
+        public string getIcon(int id, bool devMode, bool chageColor){
             if (devMode){
                 if(!(id >= icons.Length)){
+                    try{if(chageColor) Console.ForegroundColor = colors[id+2];}catch{
+                        int x = 0;
+                    }
                     return devIcons[id];
                 }
-                else if(Util.containsId(customTiles, id))
+                //Console.Write("728, ");
+                if(Util.containsId(customTiles, id))
                 {
                     for(int i = 0; i < customTiles.Length; i++){
                         if(id == customTiles[i].getId()){
+                            if(chageColor) Console.ForegroundColor = customTiles[i].getColor();
                             return customTiles[i].getDevIcon();
                         }
                     }
                 }
             }else if(!(id >= icons.Length)){
+                if(chageColor) Console.ForegroundColor = colors[id+2];
                 return icons[id];
             }
-            else if(Util.containsId(customTiles, id))
+            //Console.Write("742, ");
+            if(Util.containsId(customTiles, id))
             {
                 for(int i = 0; i < customTiles.Length; i++){
                     if(id == customTiles[i].getId()){
+                        if(chageColor) Console.ForegroundColor = customTiles[i].getColor();
                         return customTiles[i].getIcon();
                     }
                 }
@@ -728,13 +785,14 @@ namespace TextGame
             if(customTiles != null){
                 max += customTiles.Length;
             }
-            CustomTile[] tmp = customTiles;
+            CustomTile[] tmp = (CustomTile[])customTiles.Clone();
             customTiles = new CustomTile[max];
             for(int i = 0; i < max; i++){
-                if(i >= tmp.Length){
+                Console.Write(i+", ");
+                if(!(i >= tmp.Length)){
                     customTiles[i] = tmp[i];
                 }else{
-                    customTiles[i] = defualtTiles[i];
+                    customTiles[i] = defualtTiles[i-1];
                 }
             }
             
@@ -745,6 +803,7 @@ namespace TextGame
             lvl = lvl1;
             //mapSizeX = map.GetLength(0);
             //mapSizeY = map.GetLength(1);
+            writeMap(false);
         }
 
         private int[] tp(int tpX, int tpY, int x, int y, bool playerOnTp){

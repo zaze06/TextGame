@@ -1,6 +1,6 @@
 using System;
 
-namespace TextGame
+namespace TextGame.Tiles
 {
     public interface CustomTile
     {
@@ -11,6 +11,6 @@ namespace TextGame
         bool canWalkOn();
         ConsoleColor getColor();
         void playerOnTop(int x, int y, Game game);
-        string placeTile(int x, int y, bool dev, Game game);
+        void placeTile(int x, int y, bool dev, Game game);
     }
 }
